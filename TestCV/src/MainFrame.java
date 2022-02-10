@@ -1,19 +1,14 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JInternalFrame;
 
-public class MainFrame extends JFrame implements ActionListener  {
+public class MainFrame extends JFrame  {
 
 	private JPanel contentPane;
 	
@@ -38,6 +33,7 @@ public class MainFrame extends JFrame implements ActionListener  {
 	 * Create the frame.
 	 */
 	public MainFrame() {
+		setTitle("TestCV");
 		initialize();
 	}
 	
@@ -58,24 +54,12 @@ public class MainFrame extends JFrame implements ActionListener  {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JInternalFrame internalFrame = new JInternalFrame("New JInternalFrame");
-		internalFrame.setClosable(true);
+		WelcomeFrame wcFrame = new WelcomeFrame();
+		JInternalFrame internalFrame = wcFrame.getInteralFrame();
 		contentPane.add(internalFrame, BorderLayout.CENTER);
-		internalFrame.setVisible(true);
-		
-		JButton myButton = new JButton("New Window");
-		myButton.setBounds(100,160,200,40);
-		myButton.setFocusable(false);
-		myButton.addActionListener(this);
-		
 		
 		
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
