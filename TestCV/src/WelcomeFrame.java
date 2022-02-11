@@ -8,7 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
-@SuppressWarnings("serial")
+
 public class WelcomeFrame extends JInternalFrame {
 
 	/**
@@ -23,7 +23,7 @@ public class WelcomeFrame extends JInternalFrame {
 	
 	public WelcomeFrame() {
 		internalFrame = new JInternalFrame("Welcome!");
-		internalFrame.setClosable(true);
+		internalFrame.setClosable(false);
 		internalFrame.setVisible(true);
 		//contentPane.add(internalFrame, BorderLayout.CENTER);
 		
@@ -43,7 +43,7 @@ public class WelcomeFrame extends JInternalFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				
+				TestFrame tFrame = new TestFrame();
 			}
 		});
 		
