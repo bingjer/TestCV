@@ -32,19 +32,25 @@ public class TestFrame extends JFrame {
 	 */
 	public TestFrame() {
 		
-		JLabel label = new JLabel("New label");
-		getContentPane().add(label, BorderLayout.WEST);
 		counter = 0;
 		setTitle("Add Test");
 		JFrame frame = new JFrame();
 		frame.setVisible(true);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frame.setContentPane(contentPane);
 		
 		JButton btnNewButton = new JButton("Add Phase");
+		btnNewButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				PhaseFrame phaseFrame = new PhaseFrame();
+			}
+		});
 		
 		JButton btnNewButton_1 = new JButton("Delete Phase");
 		
