@@ -6,6 +6,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
@@ -23,12 +24,14 @@ public class WelcomeFrame extends JInternalFrame {
 	/**
 	 * Create the frame.
 	 */
-	private JInternalFrame internalFrame;
+	private JFrame jFrame;
 	
 	public WelcomeFrame() {
-		internalFrame = new JInternalFrame("Welcome!");
-		internalFrame.setClosable(false);
-		internalFrame.setVisible(true);
+		jFrame = new JFrame("Welcome!");
+		jFrame.setAlwaysOnTop(true);
+		jFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		jFrame.setVisible(true);
+		jFrame.setBounds(100, 100, 450, 300);
 		//contentPane.add(internalFrame, BorderLayout.CENTER);
 		
 		JButton btnNewButton = new JButton("Exisiting test");
@@ -68,7 +71,7 @@ public class WelcomeFrame extends JInternalFrame {
 		lblNewLabel.setFont(new Font("Stencil", Font.BOLD | Font.ITALIC, 30));
 		
 		
-		GroupLayout groupLayout = new GroupLayout(internalFrame.getContentPane());
+		GroupLayout groupLayout = new GroupLayout(jFrame.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
@@ -93,15 +96,13 @@ public class WelcomeFrame extends JInternalFrame {
 						.addComponent(btnNewButton_1))
 					.addGap(62))
 		);
-		internalFrame.getContentPane().setLayout(groupLayout);
+		jFrame.getContentPane().setLayout(groupLayout);
 
 	}
 	
-	public JInternalFrame getInteralFrame() {
-		return internalFrame;
-	}
+	
 	
 	public void dispose_frame() {
-		internalFrame.dispose();
+		jFrame.dispose();
 	}
 }
