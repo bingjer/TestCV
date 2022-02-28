@@ -27,6 +27,9 @@ public class PhaseFrame extends JFrame {
 	private JTextField element_path_textbox;
 	private JTextField msg_textbox;
 	private JTextField screenshot_path_textbox;
+	private JTextField phaseName_txtField;
+	private JFrame frmEnterPhase;
+	private boolean was_successful;
 
 	/**
 	 * Launch the application.
@@ -36,7 +39,7 @@ public class PhaseFrame extends JFrame {
 	 * Create the frame.
 	 */
 	public PhaseFrame(PhaseInfo phase_info, boolean successfullyAdded) {
-		JFrame frmEnterPhase = new JFrame();
+		frmEnterPhase = new JFrame();
 		frmEnterPhase.setTitle("Phase");
 		frmEnterPhase.setVisible(true);
 		frmEnterPhase.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -119,7 +122,10 @@ public class PhaseFrame extends JFrame {
 		add_phase_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String url = url_textbox.getText();
+				String phase_name = phaseName_txtField.getText();
 				phase_info.set_url(url);
+				phase_info.set_phase_name(phase_name);
+				//System.out.println(phase_info.get_phase_name());
 				
 				if (lclick_rdbtn.isSelected()) {
 					phase_info.set_interaction_type("Lclick");
@@ -133,64 +139,79 @@ public class PhaseFrame extends JFrame {
 				else {
 					//TODO: Add notification window
 				}
+				set_bool(true);
 				frmEnterPhase.dispose();
 			}
 		});
 		
 		JProgressBar progressBar = new JProgressBar();
+		
+		JLabel phaseName_lbl = new JLabel("Phase Name:");
+		
+		phaseName_txtField = new JTextField();
+		phaseName_txtField.setColumns(10);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(30)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(element_btn)
-								.addComponent(lblNewLabel))
-							.addGap(38)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(element_path_textbox, 242, 242, Short.MAX_VALUE)
-								.addComponent(url_textbox, GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE))
-							.addGap(126))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(screenshot_btn)
-								.addComponent(lblNewLabel_2))
-							.addGap(18)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(lclick_rdbtn)
-									.addGap(299))
-								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-										.addComponent(progressBar, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
-										.addComponent(msg_textbox, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
-										.addComponent(screenshot_path_textbox, GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE))
-									.addGap(126))
-								.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-									.addComponent(rclick_rdbtn)
-									.addContainerGap())
-								.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-									.addComponent(type_rdbtn)
-									.addContainerGap())))))
-				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(211)
 					.addComponent(add_phase_btn)
 					.addContainerGap(235, Short.MAX_VALUE))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(30)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(phaseName_lbl)
+							.addContainerGap())
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_contentPane.createSequentialGroup()
+								.addComponent(lblNewLabel)
+								.addContainerGap())
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addComponent(element_btn)
+									.addContainerGap())
+								.addGroup(gl_contentPane.createSequentialGroup()
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+										.addComponent(screenshot_btn)
+										.addComponent(lblNewLabel_2))
+									.addGap(18)
+									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addComponent(lclick_rdbtn)
+											.addGap(299))
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+												.addComponent(progressBar, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+												.addComponent(msg_textbox, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+												.addComponent(screenshot_path_textbox, GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+												.addComponent(element_path_textbox, Alignment.LEADING, 242, 242, Short.MAX_VALUE)
+												.addComponent(url_textbox, GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE)
+												.addComponent(phaseName_txtField, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 242, Short.MAX_VALUE))
+											.addGap(126))
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addComponent(rclick_rdbtn)
+											.addContainerGap())
+										.addGroup(gl_contentPane.createSequentialGroup()
+											.addComponent(type_rdbtn)
+											.addContainerGap())))))))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(31)
+				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+					.addContainerGap(27, Short.MAX_VALUE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(url_textbox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE))
-					.addGap(38)
+						.addComponent(phaseName_lbl)
+						.addComponent(phaseName_txtField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(element_path_textbox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(element_btn))
-					.addPreferredGap(ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+						.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 17, GroupLayout.PREFERRED_SIZE)
+						.addComponent(url_textbox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(element_btn)
+						.addComponent(element_path_textbox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(screenshot_btn)
 						.addComponent(screenshot_path_textbox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -211,5 +232,17 @@ public class PhaseFrame extends JFrame {
 					.addContainerGap())
 		);
 		contentPane.setLayout(gl_contentPane);
+	}
+	
+	private void set_bool(boolean isTrue) {
+		was_successful = isTrue;
+	}
+	
+	public boolean get_bool() {
+		return was_successful;
+	}
+	
+	public boolean is_frame_visible() {
+		return frmEnterPhase.isVisible();
 	}
 }

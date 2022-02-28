@@ -29,7 +29,6 @@ public class TestFrame extends JFrame {
 	private int counter;
 	private JFrame frame = new JFrame(); 
 	private Vector<PhaseInfo> phase_info_vec;
-	private int phase_counter;
 
 	
 	/**
@@ -54,7 +53,6 @@ public class TestFrame extends JFrame {
 		JScrollPane scrollpane = new JScrollPane(list);
 		
 		
-		phase_counter = 1;
 		
 		JButton add_phase_btn = new JButton("Add Phase");
 		add_phase_btn.addActionListener(new ActionListener() {
@@ -63,18 +61,21 @@ public class TestFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				PhaseInfo phase_info = new PhaseInfo();
-				boolean wasSuccessful = true;
-				PhaseFrame phaseFrame = new PhaseFrame(phase_info, wasSuccessful);
-				if(wasSuccessful == true) {
+				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(phase_info, frmTestRunner);
+				System.out.println(phase_info.get_phase_name());
+				System.out.println(phase_info.get_url_name());
+//				boolean wasSuccessful = true;
+//				PhaseFrame phaseFrame = new PhaseFrame(phase_info, wasSuccessful);
+//				System.out.println(phase_info.get_phase_name());
+//					System.out.println(phase_info.get_phase_name());
 					phase_info_vec.add(phase_info);
-					phase_list.addElement("Phase " + phase_counter);
+					phase_list.addElement(phase_info.get_phase_name());
 					list.setModel(phase_list);
-					phase_counter++;
-				}
+//		
 	
 			}
 		});
-		
+
 		JButton delete_phase_btn = new JButton("Delete Phase");
 		delete_phase_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
