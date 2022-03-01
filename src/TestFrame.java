@@ -68,9 +68,18 @@ public class TestFrame extends JFrame {
 //				PhaseFrame phaseFrame = new PhaseFrame(phase_info, wasSuccessful);
 //				System.out.println(phase_info.get_phase_name());
 //					System.out.println(phase_info.get_phase_name());
+				int index = list.getSelectedIndex();
+				if (index != -1) {
+					phase_info_vec.add(index + 1, phase_info);
+					//phase_list.addElement(phase_info.get_phase_name());
+					phase_list.add(index + 1, phase_info.get_phase_name());
+					list.setModel(phase_list);
+				} else {
 					phase_info_vec.add(phase_info);
 					phase_list.addElement(phase_info.get_phase_name());
 					list.setModel(phase_list);
+				}
+				
 //		
 	
 			}
@@ -91,10 +100,35 @@ public class TestFrame extends JFrame {
 		
 		
 		JButton save_test_btn = new JButton("Save Test");
+		save_test_btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for(PhaseInfo phase : phase_info_vec) {
+					System.out.println(phase.get_phase_name());
+				}
+				TestInfo test = new TestInfo();
+				test.write_json(phase_info_vec);
+			}
+		});
 		
 		JButton run_btn = new JButton("Run");
 		
 		JButton view_phase_btn = new JButton("View Phase");
+		view_phase_btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int index = list.getSelectedIndex();
+				PhaseInfo selected_phase = phase_info_vec.get(index);
+				String phase_name = selected_phase.get_phase_name();
+				String url = selected_phase.get_url_name();
+				String element = selected_phase.get_element();
+				String screenshot = selected_phase.get_screenshot();
+				String interaction = selected_phase.get_interaction_type();
+				String message = selected_phase.get_message();
+				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(selected_phase, phase_name, url, element, screenshot, interaction,message, frmTestRunner);
+				phase_info_vec.set(index, selected_phase);
+				phase_list.set(index, selected_phase.get_phase_name());
+				list.setModel(phase_list);
+			}
+		});
 
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
