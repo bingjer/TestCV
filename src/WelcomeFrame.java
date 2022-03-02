@@ -1,6 +1,8 @@
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.Vector;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -12,6 +14,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
+
+import org.json.simple.parser.ParseException;
 
 
 public class WelcomeFrame extends JInternalFrame {
@@ -39,12 +43,22 @@ public class WelcomeFrame extends JInternalFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dispose_frame();
-				JFileChooser j = new JFileChooser();
-				j.showOpenDialog(null);
-				String file_path = j.getSelectedFile().getAbsolutePath();
-				System.out.println(file_path);
 				
+				//JFileChooser j = new JFileChooser();
+				//j.showOpenDialog(null);
+				//String file = j.getSelectedFile().getAbsolutePath();
+				String file = "test";
+				System.out.println(file);
+				Vector<PhaseInfo> phase_vec = new Vector<PhaseInfo>();
+				TestInfo test = new TestInfo();
+				try {
+					test.load_json(file, phase_vec);
+				} catch (IOException | ParseException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				TestFrame tFrame = new TestFrame(phase_vec);
+				dispose_frame();
 				//For getting a file and/or directory
 //				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 //				//or
