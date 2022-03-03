@@ -1,6 +1,7 @@
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Vector;
 
@@ -44,16 +45,15 @@ public class WelcomeFrame extends JInternalFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				//JFileChooser j = new JFileChooser();
-				//j.showOpenDialog(null);
-				//String file = j.getSelectedFile().getAbsolutePath();
-				String file = "test";
+				JFileChooser j = new JFileChooser();
+				j.showOpenDialog(null);
+				String file = j.getSelectedFile().getAbsolutePath();
 				System.out.println(file);
 				Vector<PhaseInfo> phase_vec = new Vector<PhaseInfo>();
 				TestInfo test = new TestInfo();
 				try {
 					test.load_json(file, phase_vec);
-				} catch (IOException | ParseException e1) {
+				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}

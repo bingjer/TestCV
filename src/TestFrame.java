@@ -20,6 +20,7 @@ import java.awt.List;
 import javax.swing.JTextPane;
 import javax.swing.JTextArea;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
 
 public class TestFrame extends JFrame {
@@ -106,7 +107,11 @@ public class TestFrame extends JFrame {
 					System.out.println(phase.get_phase_name());
 				}
 				TestInfo test = new TestInfo();
-				test.write_json(phase_info_vec);
+				JFileChooser j = new JFileChooser();
+				j.showSaveDialog(null);
+				String file = j.getSelectedFile().getAbsolutePath();
+				System.out.println(file);
+				test.write_json(file, phase_info_vec);
 			}
 		});
 		
@@ -246,7 +251,11 @@ public class TestFrame extends JFrame {
 					System.out.println(phase.get_phase_name());
 				}
 				TestInfo test = new TestInfo();
-				test.write_json(phase_info_vec);
+				JFileChooser j = new JFileChooser();
+				j.showSaveDialog(null);
+				String file = j.getSelectedFile().getAbsolutePath();
+				System.out.println(file);
+				test.write_json(file, phase_info_vec);
 			}
 		});
 		
