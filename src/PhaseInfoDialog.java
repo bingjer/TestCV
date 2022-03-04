@@ -132,6 +132,9 @@ public class PhaseInfoDialog extends JDialog {
 		btn_takeScreenShot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				textField_takeScreenshot.setText("test");
+				Screenshotter ss = new Screenshotter();
+				Thread t = new Thread(ss);
+				t.start();
 			}
 		});
 		
@@ -336,6 +339,9 @@ public class PhaseInfoDialog extends JDialog {
 		btn_takeScreenShot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				textField_takeScreenshot.setText("test");
+				Screenshotter ss = new Screenshotter();
+				Thread t = new Thread(ss);
+				t.start();
 			}
 		});
 		

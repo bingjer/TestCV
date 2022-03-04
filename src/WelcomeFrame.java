@@ -16,7 +16,6 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-import org.json.simple.parser.ParseException;
 
 
 public class WelcomeFrame extends JInternalFrame {
