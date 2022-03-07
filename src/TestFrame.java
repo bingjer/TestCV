@@ -22,6 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
+import javax.swing.JTextField;
 
 public class TestFrame extends JFrame {
 
@@ -30,6 +31,7 @@ public class TestFrame extends JFrame {
 	private int counter;
 	private JFrame frame = new JFrame(); 
 	private Vector<PhaseInfo> phase_info_vec;
+	private JTextField txtField_url;
 
 	
 	/**
@@ -37,6 +39,7 @@ public class TestFrame extends JFrame {
 	 */
 	public TestFrame() {
 		phase_info_vec = new Vector<PhaseInfo>();
+		counter = 0;
 		setTitle("Add Test");
 		JFrame frmTestRunner = new JFrame();
 		frmTestRunner.setTitle("Test Runner");
@@ -62,14 +65,15 @@ public class TestFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				PhaseInfo phase_info = new PhaseInfo();
-				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(phase_info, frmTestRunner);
+				String url = txtField_url.getText();
+				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, phase_info, url, frmTestRunner);
 				System.out.println(phase_info.get_phase_name());
-				System.out.println(phase_info.get_url_name());
 //				boolean wasSuccessful = true;
 //				PhaseFrame phaseFrame = new PhaseFrame(phase_info, wasSuccessful);
 //				System.out.println(phase_info.get_phase_name());
 //					System.out.println(phase_info.get_phase_name());
 				int index = list.getSelectedIndex();
+				counter = index;
 				if (index != -1) {
 					phase_info_vec.add(index + 1, phase_info);
 					//phase_list.addElement(phase_info.get_phase_name());
@@ -123,17 +127,22 @@ public class TestFrame extends JFrame {
 				int index = list.getSelectedIndex();
 				PhaseInfo selected_phase = phase_info_vec.get(index);
 				String phase_name = selected_phase.get_phase_name();
-				String url = selected_phase.get_url_name();
 				String element = selected_phase.get_element();
 				String screenshot = selected_phase.get_screenshot();
 				String interaction = selected_phase.get_interaction_type();
 				String message = selected_phase.get_message();
-				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(selected_phase, phase_name, url, element, screenshot, interaction,message, frmTestRunner);
+				String url = txtField_url.getText();
+				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction,message, frmTestRunner);
 				phase_info_vec.set(index, selected_phase);
 				phase_list.set(index, selected_phase.get_phase_name());
 				list.setModel(phase_list);
 			}
 		});
+		
+		JLabel lbl_url = new JLabel("URL:");
+		
+		txtField_url = new JTextField();
+		txtField_url.setColumns(10);
 
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -145,23 +154,32 @@ public class TestFrame extends JFrame {
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(view_phase_btn)
+						.addComponent(run_btn)
+						.addComponent(save_test_btn)
 						.addComponent(delete_phase_btn)
 						.addComponent(add_phase_btn)
-						.addComponent(run_btn)
-						.addComponent(save_test_btn))
-					.addContainerGap(32, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lbl_url)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtField_url, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(14, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE, false)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(12)
 							.addComponent(add_phase_btn)
-							.addGap(9)
+							.addPreferredGap(ComponentPlacement.RELATED)
 							.addComponent(delete_phase_btn)
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addGap(8)
+							.addComponent(view_phase_btn)
+							.addGap(10)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lbl_url)
+								.addComponent(txtField_url, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED.RELATED)
 							.addComponent(view_phase_btn)
 							.addGap(30)
 							.addComponent(save_test_btn)
@@ -206,9 +224,9 @@ public class TestFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				PhaseInfo phase_info = new PhaseInfo();
-				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(phase_info, frmTestRunner);
+				String url = txtField_url.getText();
+				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, phase_info, url, frmTestRunner);
 				System.out.println(phase_info.get_phase_name());
-				System.out.println(phase_info.get_url_name());
 //				boolean wasSuccessful = true;
 //				PhaseFrame phaseFrame = new PhaseFrame(phase_info, wasSuccessful);
 //				System.out.println(phase_info.get_phase_name());
@@ -267,12 +285,12 @@ public class TestFrame extends JFrame {
 				int index = list.getSelectedIndex();
 				PhaseInfo selected_phase = phase_info_vec.get(index);
 				String phase_name = selected_phase.get_phase_name();
-				String url = selected_phase.get_url_name();
 				String element = selected_phase.get_element();
 				String screenshot = selected_phase.get_screenshot();
 				String interaction = selected_phase.get_interaction_type();
 				String message = selected_phase.get_message();
-				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(selected_phase, phase_name, url, element, screenshot, interaction,message, frmTestRunner);
+				String url = txtField_url.getText();
+				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction,message, frmTestRunner);
 				phase_info_vec.set(index, selected_phase);
 				phase_list.set(index, selected_phase.get_phase_name());
 				list.setModel(phase_list);

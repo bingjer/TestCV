@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
@@ -22,7 +23,6 @@ public class PhaseInfoDialog extends JDialog {
 
 	private final JPanel contentPanel;
 	private JTextField txtField_phaseName;
-	private JTextField txtField_webpageURL;
 	private JTextField txtField_addElement;
 	private JTextField textField_takeScreenshot;
 	private JTextField txtField_type;
@@ -44,7 +44,7 @@ public class PhaseInfoDialog extends JDialog {
 	 * Create the dialog.
 	 * 
 	 */
-	public PhaseInfoDialog(PhaseInfo phase_info, String phase_name, String url, String element, String screenshot, String interaction, String message, JFrame frame) {
+	public PhaseInfoDialog(int index, Vector<PhaseInfo> phase_info_vec, PhaseInfo phase_info, String url, String phase_name, String element, String screenshot, String interaction, String message, JFrame frame) {
 		
 		JDialog dialog = new JDialog(frame);
 		dialog.setModal(true);
@@ -80,10 +80,8 @@ public class PhaseInfoDialog extends JDialog {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String text = txtField_phaseName.getText();
-				String url = txtField_webpageURL.getText();
 				String element = txtField_addElement.getText();
 				String expected = textField_takeScreenshot.getText();
-				phase_info.set_url(url);
 				phase_info.set_phase_name(text);
 				phase_info.set_element_path(element);
 				phase_info.set_expected_path(expected);
@@ -109,8 +107,6 @@ public class PhaseInfoDialog extends JDialog {
 		
 		JLabel lblWebpageUrl = new JLabel("WebPage URL:");
 		
-		txtField_webpageURL = new JTextField();
-		txtField_webpageURL.setColumns(10);
 		
 		JButton btn_addElement = new JButton("Add Element");
 		btn_addElement.addActionListener(new ActionListener() {
@@ -131,8 +127,11 @@ public class PhaseInfoDialog extends JDialog {
 		JButton btn_takeScreenShot = new JButton("Take Screenshot");
 		btn_takeScreenShot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				textField_takeScreenshot.setText("test");
-				Screenshotter ss = new Screenshotter();
+				JFileChooser j = new JFileChooser();
+				j.showSaveDialog(null);
+				String file = j.getSelectedFile().getAbsolutePath();
+				textField_takeScreenshot.setText(file);
+				Screenshotter ss = new Screenshotter(index, phase_info_vec, file, url);
 				Thread t = new Thread(ss);
 				t.start();
 			}
@@ -152,21 +151,22 @@ public class PhaseInfoDialog extends JDialog {
 		txtField_type.setColumns(10);
 		
 		txtField_phaseName.setText(phase_name);
-		txtField_webpageURL.setText(url);
 		txtField_addElement.setText(element);
 		textField_takeScreenshot.setText(screenshot);
 		txtField_type.setText(message);
+		
 		
 		GroupLayout groupLayout = new GroupLayout(contentPanel);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(47)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(47)
+							.addComponent(lblPhaseName)
+							.addContainerGap())
+						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblPhaseName)
-								.addComponent(lblWebpageUrl)
 								.addComponent(btn_addElement)
 								.addComponent(btn_takeScreenShot)
 								.addComponent(lbl_interaction))
@@ -174,34 +174,28 @@ public class PhaseInfoDialog extends JDialog {
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(26)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(txtField_phaseName, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-										.addComponent(txtField_webpageURL, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
 										.addComponent(txtField_addElement, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
 										.addComponent(textField_takeScreenshot, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-										.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+										.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(txtField_phaseName, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)))
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(24)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addComponent(rdbtn_rClick, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
 										.addComponent(rdbtn_lClick)
 										.addComponent(rdbtn_type, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-										.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, 178, GroupLayout.PREFERRED_SIZE)))))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(208)
-							.addComponent(btnNewButton)))
-					.addGap(143))
+										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+											.addComponent(btnNewButton)
+											.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, 178, GroupLayout.PREFERRED_SIZE)))))
+							.addGap(143))))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(31)
+					.addGap(69)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(txtField_phaseName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblPhaseName))
-					.addGap(18)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblWebpageUrl)
-						.addComponent(txtField_webpageURL, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(lblPhaseName)
+						.addComponent(txtField_phaseName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btn_addElement)
@@ -222,9 +216,9 @@ public class PhaseInfoDialog extends JDialog {
 					.addComponent(rdbtn_type)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+					.addGap(18)
 					.addComponent(btnNewButton)
-					.addContainerGap())
+					.addContainerGap(15, Short.MAX_VALUE))
 		);
 		contentPanel.setLayout(groupLayout);
 		dialog.setVisible(true);
@@ -251,7 +245,7 @@ public class PhaseInfoDialog extends JDialog {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public PhaseInfoDialog(PhaseInfo phase_info, JFrame frame) {
+	public PhaseInfoDialog(int index, Vector<PhaseInfo> phase_info_vec, PhaseInfo phase_info, String url, JFrame frame) {
 		
 		JDialog dialog = new JDialog(frame);
 		dialog.setModal(true);
@@ -282,15 +276,13 @@ public class PhaseInfoDialog extends JDialog {
 		btnGroup.add(rdbtn_rClick);
 		btnGroup.add(rdbtn_type);
 		
-		JButton btnNewButton = new JButton("Ok");
+		JButton btnNewButton = new JButton("Done");
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String text = txtField_phaseName.getText();
-				String url = txtField_webpageURL.getText();
 				String element = txtField_addElement.getText();
 				String expected = textField_takeScreenshot.getText();
-				phase_info.set_url(url);
 				phase_info.set_phase_name(text);
 				phase_info.set_element_path(element);
 				phase_info.set_expected_path(expected);
@@ -314,11 +306,6 @@ public class PhaseInfoDialog extends JDialog {
 			}
 		});
 		
-		JLabel lblWebpageUrl = new JLabel("WebPage URL:");
-		
-		txtField_webpageURL = new JTextField();
-		txtField_webpageURL.setColumns(10);
-		
 		JButton btn_addElement = new JButton("Add Element");
 		btn_addElement.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -338,8 +325,11 @@ public class PhaseInfoDialog extends JDialog {
 		JButton btn_takeScreenShot = new JButton("Take Screenshot");
 		btn_takeScreenShot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				textField_takeScreenshot.setText("test");
-				Screenshotter ss = new Screenshotter();
+				JFileChooser j = new JFileChooser();
+				j.showSaveDialog(null);
+				String file = j.getSelectedFile().getAbsolutePath();
+				textField_takeScreenshot.setText(file);
+				Screenshotter ss = new Screenshotter(index ,phase_info_vec, file, url);
 				Thread t = new Thread(ss);
 				t.start();
 			}
@@ -358,16 +348,19 @@ public class PhaseInfoDialog extends JDialog {
 		txtField_type = new JTextField();
 		txtField_type.setColumns(10);
 		
+		
+		
 		GroupLayout groupLayout = new GroupLayout(contentPanel);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(47)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(47)
+							.addComponent(lblPhaseName)
+							.addContainerGap())
+						.addGroup(groupLayout.createSequentialGroup()
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblPhaseName)
-								.addComponent(lblWebpageUrl)
 								.addComponent(btn_addElement)
 								.addComponent(btn_takeScreenShot)
 								.addComponent(lbl_interaction))
@@ -375,34 +368,28 @@ public class PhaseInfoDialog extends JDialog {
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(26)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(txtField_phaseName, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-										.addComponent(txtField_webpageURL, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
 										.addComponent(txtField_addElement, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
 										.addComponent(textField_takeScreenshot, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-										.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+										.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(txtField_phaseName, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)))
 								.addGroup(groupLayout.createSequentialGroup()
 									.addGap(24)
 									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 										.addComponent(rdbtn_rClick, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
 										.addComponent(rdbtn_lClick)
 										.addComponent(rdbtn_type, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-										.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, 178, GroupLayout.PREFERRED_SIZE)))))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(208)
-							.addComponent(btnNewButton)))
-					.addGap(143))
+										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+											.addComponent(btnNewButton)
+											.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, 178, GroupLayout.PREFERRED_SIZE)))))
+							.addGap(143))))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(31)
+					.addGap(69)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(txtField_phaseName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblPhaseName))
-					.addGap(18)
-					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
-						.addComponent(lblWebpageUrl)
-						.addComponent(txtField_webpageURL, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+						.addComponent(lblPhaseName)
+						.addComponent(txtField_phaseName, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btn_addElement)
@@ -423,9 +410,9 @@ public class PhaseInfoDialog extends JDialog {
 					.addComponent(rdbtn_type)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+					.addGap(18)
 					.addComponent(btnNewButton)
-					.addContainerGap())
+					.addContainerGap(15, Short.MAX_VALUE))
 		);
 		contentPanel.setLayout(groupLayout);
 		dialog.setVisible(true);

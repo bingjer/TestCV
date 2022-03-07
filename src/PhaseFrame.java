@@ -123,7 +123,6 @@ public class PhaseFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String url = url_textbox.getText();
 				String phase_name = phaseName_txtField.getText();
-				phase_info.set_url(url);
 				phase_info.set_phase_name(phase_name);
 				//System.out.println(phase_info.get_phase_name());
 				

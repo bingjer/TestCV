@@ -1,6 +1,5 @@
 
 public class PhaseInfo {
-	private String url;
 	private String element_path;
 	private String expected_path;
 	private String interaction_type;
@@ -8,17 +7,11 @@ public class PhaseInfo {
 	private String message;
 	
 	public PhaseInfo() {
-		this.url = "";
 		this.element_path = "";
 		this.expected_path = "";
 		this.interaction_type = "";
 		this.phase_name = "";
 		this.message = "";
-	}
-	
-	
-	public void set_url(String url) {
-		this.url = url;
 	}
 	
 	public void set_element_path(String element_path) {
@@ -45,9 +38,6 @@ public class PhaseInfo {
 		return phase_name;
 	}
 	
-	public String get_url_name() {
-		return url;
-	}
 	
 	public String get_element() {
 		return element_path;
@@ -58,7 +48,7 @@ public class PhaseInfo {
 	}
 	
 	public String get_interaction_type() {
-		return url;
+		return interaction_type;
 	}
 	
 	public String get_message() {

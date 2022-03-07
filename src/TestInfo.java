@@ -31,7 +31,6 @@ public class TestInfo {
 			//Map inner_obj = new LinkedHashMap();
 			JsonObject inner_obj = new JsonObject();
 			inner_obj.addProperty("Phase", phase.get_phase_name());
-			inner_obj.addProperty("URL", phase.get_url_name());
 			inner_obj.addProperty("Element", phase.get_element());
 			inner_obj.addProperty("Screenshot", phase.get_screenshot());
 			inner_obj.addProperty("Interaction", phase.get_interaction_type());
@@ -91,9 +90,6 @@ public class TestInfo {
 				switch(inner_key_string) {
 				case "Phase":
 					phase.set_phase_name(inner_value_string);
-					break;
-				case "URL":
-					phase.set_url(inner_value_string);
 					break;
 				case "Element":
 					phase.set_element_path(inner_value_string);
