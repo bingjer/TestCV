@@ -18,6 +18,7 @@ import java.util.Vector;
 import java.awt.event.ActionEvent;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
+import java.awt.Dialog.ModalityType;
 
 public class PhaseInfoDialog extends JDialog {
 
@@ -26,6 +27,7 @@ public class PhaseInfoDialog extends JDialog {
 	private JTextField txtField_addElement;
 	private JTextField textField_takeScreenshot;
 	private JTextField txtField_type;
+	private String file_name;
 
 	/**
 	 * Launch the application.
@@ -130,10 +132,12 @@ public class PhaseInfoDialog extends JDialog {
 				JFileChooser j = new JFileChooser();
 				j.showSaveDialog(null);
 				String file = j.getSelectedFile().getAbsolutePath();
-				textField_takeScreenshot.setText(file);
-				Screenshotter ss = new Screenshotter(index, phase_info_vec, file, url);
-				Thread t = new Thread(ss);
-				t.start();
+				String element = phase_info.get_element();
+//				Screenshotter ss = new Screenshotter(index, phase_info_vec, file, url, element);
+//				Thread t = new Thread(ss);
+//				t.start();
+				file_name = j.getSelectedFile().getAbsolutePath();
+				textField_takeScreenshot.setText(file_name);
 			}
 		});
 		
@@ -248,6 +252,7 @@ public class PhaseInfoDialog extends JDialog {
 	public PhaseInfoDialog(int index, Vector<PhaseInfo> phase_info_vec, PhaseInfo phase_info, String url, JFrame frame) {
 		
 		JDialog dialog = new JDialog(frame);
+		dialog.setModalityType(ModalityType.APPLICATION_MODAL);
 		dialog.setModal(true);
 		dialog.setTitle("Phase Frame");
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -302,6 +307,27 @@ public class PhaseInfoDialog extends JDialog {
 				else {
 					//TODO: Add notification window
 				}
+				
+				String interaction_type = "";
+				if (rdbtn_lClick.isSelected()) {
+					interaction_type = "Lclick";
+				}
+				else if (rdbtn_rClick.isSelected()) {
+					interaction_type = "Rclick";
+				}
+				else if (rdbtn_type.isSelected()) {
+					interaction_type = "Type";
+				} 
+				else {
+					//TODO: Add notification window
+				}
+
+				
+				Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element);
+				
+				Thread t = new Thread(ss);
+				t.start();
+				//phase_info_vec.add(phase_info);
 				dialog.dispose();
 			}
 		});
@@ -327,11 +353,9 @@ public class PhaseInfoDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser j = new JFileChooser();
 				j.showSaveDialog(null);
-				String file = j.getSelectedFile().getAbsolutePath();
-				textField_takeScreenshot.setText(file);
-				Screenshotter ss = new Screenshotter(index ,phase_info_vec, file, url);
-				Thread t = new Thread(ss);
-				t.start();
+				file_name = j.getSelectedFile().getAbsolutePath();
+				textField_takeScreenshot.setText(file_name);
+				
 			}
 		});
 		

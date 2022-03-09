@@ -26,7 +26,7 @@ import javax.swing.JTextField;
 
 public class TestFrame extends JFrame {
 
-	protected static final String JLabel = null;
+	//protected static final String JLabel = null;
 	private JPanel contentPane;
 	private int counter;
 	private JFrame frame = new JFrame(); 
@@ -56,7 +56,8 @@ public class TestFrame extends JFrame {
 		JList list = new JList(phase_list);
 		JScrollPane scrollpane = new JScrollPane(list);
 		
-		
+		txtField_url = new JTextField();
+		txtField_url.setColumns(10);
 		
 		JButton add_phase_btn = new JButton("Add Phase");
 		add_phase_btn.addActionListener(new ActionListener() {
@@ -65,7 +66,7 @@ public class TestFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				PhaseInfo phase_info = new PhaseInfo();
-				String url = txtField_url.getText();
+				String url = "test"; //txtField_url.getText();
 				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, phase_info, url, frmTestRunner);
 				System.out.println(phase_info.get_phase_name());
 //				boolean wasSuccessful = true;
@@ -73,13 +74,18 @@ public class TestFrame extends JFrame {
 //				System.out.println(phase_info.get_phase_name());
 //					System.out.println(phase_info.get_phase_name());
 				int index = list.getSelectedIndex();
-				counter = index;
+				
 				if (index != -1) {
+					counter = index;
 					phase_info_vec.add(index + 1, phase_info);
+					++counter;
 					//phase_list.addElement(phase_info.get_phase_name());
 					phase_list.add(index + 1, phase_info.get_phase_name());
 					list.setModel(phase_list);
 				} else {
+					counter = phase_info_vec.size();
+					++counter;
+					System.out.println("shouldn't be here");
 					phase_info_vec.add(phase_info);
 					phase_list.addElement(phase_info.get_phase_name());
 					list.setModel(phase_list);
@@ -147,46 +153,44 @@ public class TestFrame extends JFrame {
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 277, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 194, GroupLayout.PREFERRED_SIZE)
+					.addGap(48)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(view_phase_btn)
-						.addComponent(run_btn)
-						.addComponent(save_test_btn)
-						.addComponent(delete_phase_btn)
-						.addComponent(add_phase_btn)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lbl_url)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtField_url, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(14, Short.MAX_VALUE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(txtField_url, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE))
+						.addComponent(add_phase_btn)
+						.addComponent(delete_phase_btn)
+						.addComponent(view_phase_btn)
+						.addComponent(save_test_btn)
+						.addComponent(run_btn))
+					.addGap(10))
 		);
 		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+					.addGap(19)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(add_phase_btn)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(delete_phase_btn)
-							.addGap(8)
-							.addComponent(view_phase_btn)
-							.addGap(10)
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(lbl_url)
 								.addComponent(txtField_url, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addPreferredGap(ComponentPlacement.RELATED.RELATED)
+							.addGap(20)
+							.addComponent(add_phase_btn)
+							.addGap(14)
+							.addComponent(delete_phase_btn)
+							.addGap(10)
 							.addComponent(view_phase_btn)
-							.addGap(30)
+							.addGap(17)
 							.addComponent(save_test_btn)
-							.addGap(9)
+							.addGap(4)
 							.addComponent(run_btn))
-						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 205, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(47, Short.MAX_VALUE))
+						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(135, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 		
@@ -212,10 +216,11 @@ public class TestFrame extends JFrame {
 		list.setModel(phase_list);
 		JScrollPane scrollpane = new JScrollPane(list);
 		
+		JLabel lbl_url = new JLabel("URL:");
 		
 		
-		
-		
+		txtField_url = new JTextField();
+		txtField_url.setColumns(10);
 		
 		JButton add_phase_btn = new JButton("Add Phase");
 		add_phase_btn.addActionListener(new ActionListener() {
@@ -226,6 +231,7 @@ public class TestFrame extends JFrame {
 				PhaseInfo phase_info = new PhaseInfo();
 				String url = txtField_url.getText();
 				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, phase_info, url, frmTestRunner);
+				++counter;
 				System.out.println(phase_info.get_phase_name());
 //				boolean wasSuccessful = true;
 //				PhaseFrame phaseFrame = new PhaseFrame(phase_info, wasSuccessful);
@@ -289,7 +295,7 @@ public class TestFrame extends JFrame {
 				String screenshot = selected_phase.get_screenshot();
 				String interaction = selected_phase.get_interaction_type();
 				String message = selected_phase.get_message();
-				String url = txtField_url.getText();
+				String url = "test";//txtField_url.getText();
 				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction,message, frmTestRunner);
 				phase_info_vec.set(index, selected_phase);
 				phase_list.set(index, selected_phase.get_phase_name());
@@ -300,37 +306,44 @@ public class TestFrame extends JFrame {
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 277, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 194, GroupLayout.PREFERRED_SIZE)
+					.addGap(48)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(view_phase_btn)
-						.addComponent(delete_phase_btn)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lbl_url)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(txtField_url, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE))
 						.addComponent(add_phase_btn)
-						.addComponent(run_btn)
-						.addComponent(save_test_btn))
-					.addContainerGap(32, Short.MAX_VALUE))
+						.addComponent(delete_phase_btn)
+						.addComponent(view_phase_btn)
+						.addComponent(save_test_btn)
+						.addComponent(run_btn))
+					.addGap(10))
 		);
 		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE, false)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+					.addGap(19)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGap(12)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lbl_url)
+								.addComponent(txtField_url, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(20)
 							.addComponent(add_phase_btn)
-							.addGap(9)
+							.addGap(14)
 							.addComponent(delete_phase_btn)
-							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addGap(10)
 							.addComponent(view_phase_btn)
-							.addGap(30)
+							.addGap(17)
 							.addComponent(save_test_btn)
-							.addGap(9)
+							.addGap(4)
 							.addComponent(run_btn))
-						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 205, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(47, Short.MAX_VALUE))
+						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(135, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
 		

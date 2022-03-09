@@ -27,14 +27,15 @@ public class Screenshotter implements Runnable   {
 	private Vector<PhaseInfo> phase_info_vec;
 	private int index;
 	private String interaction;
+	private String element;
 	
-	public Screenshotter(int index, Vector<PhaseInfo> phase_info_vec, String file_name, String interaction) {
+	public Screenshotter(int index, Vector<PhaseInfo> phase_info_vec, String file_name, String interaction, String element) {
 		this.file_name = file_name;
-		this.url = url;
+		//this.url = url;
 		this.phase_info_vec = phase_info_vec;
 		this.index = index;
 		this.interaction = interaction;
-		
+		this.element = element;
 	}
 	
 
@@ -43,14 +44,18 @@ public class Screenshotter implements Runnable   {
 		// TODO Auto-generated method stub
 		
 		System.out.println("Thread is running...");
+		 System.out.println(interaction);
+		 System.out.println(phase_info_vec.size());
+		 System.out.println(index);
 		
 		WebDriver driver;
 		System.setProperty("webdriver.chrome.driver", "D:\\Downloads\\chromedriver_98.exe");
         driver = new ChromeDriver();
-        
-		if(phase_info_vec.isEmpty()) {
+        System.out.println(phase_info_vec.size());
+        System.out.println(index);
+		if(index == 0) {
 			// Open Chrome browser    
-	        
+	        System.out.println("am empty");
 	        //driver.get(url);
 			driver.get("http://google.com");
 	        driver.manage().window().maximize();
@@ -61,11 +66,11 @@ public class Screenshotter implements Runnable   {
 	        //s.type(fileInputTextBox, inputFilePath + "Test.docx");
 	       // s.click(openButton);
 
-	        System.out.println("I am here.");
+	        System.out.println("Line 69.");
 	        Screen s = new Screen();
-	        System.out.println("I am here 111.");
-	        Pattern textbox = new Pattern("D:\\TestImages\\Capture.PNG");
-	        System.out.println("I am here 222222.");
+	        System.out.println("Line 71.");
+	        Pattern textbox = new Pattern(element);
+	        System.out.println("Line 73.");
 	        try {
 				s.wait(textbox, 5000);
 			} catch (FindFailed e) {
@@ -90,10 +95,12 @@ public class Screenshotter implements Runnable   {
 				e.printStackTrace();
 			}
 	        System.out.println("Took Screenshot"  + " saved at " + screenShot);
+	        driver.quit();
 		} 
 		else {
-			driver.get(url);
-	        driver.manage().window().maximize();
+			//driver.get(url);
+			//driver.get("http://google.com");
+	        //driver.manage().window().maximize();
 
 	        // Click on Browse button and handle windows pop up using Sikuli
 	        //driver.findElement(By.xpath(".//*[@id='photoimg']")).click();
@@ -101,14 +108,26 @@ public class Screenshotter implements Runnable   {
 	        //s.type(fileInputTextBox, inputFilePath + "Test.docx");
 	       // s.click(openButton);
 
-	        System.out.println("I am here.");
+	        System.out.println("Line 111.");
 	        Screen s = new Screen();
-	        System.out.println("I am here 111.");
+	        System.out.println("Line 113.");
+	        System.out.println(index);
 	        for(int i = 0; i < index; i++) {
+	        	
+	        	if(i == 0) {
+	        		driver.get("http://google.com");
+	    	        driver.manage().window().maximize();
+	        	}
+	        	
+		        System.out.println(index);
+
 	        	//Pattern pattern = new Pattern(phase.get_element());
-	        	Pattern pattern = new Pattern("D:\\TestImages\\Capture.PNG");
-		        System.out.println("I am here 222222.");
+		        String element_path = phase_info_vec.get(i).get_element();
+	        	Pattern pattern = new Pattern(element_path);
+		        System.out.println("Line 127.");
 		        String interaction_type = phase_info_vec.get(i).get_interaction_type();
+		        
+		        System.out.println(interaction_type);
 		        switch(interaction_type) {
 		        case "Lclick":
 		        	try {
@@ -157,13 +176,17 @@ public class Screenshotter implements Runnable   {
 		        
 	        }
 	        
-	        Pattern pattern = new Pattern("D:\\TestImages\\Capture.PNG");
-	        System.out.println("I am here 222222.");
+	        Pattern pattern = new Pattern(element);
+	        System.out.println(element);
+	        System.out.println("Line 180.");
+	        System.out.println(interaction);
 	        //String interaction_type = phase_info_vec.get(i).get_interaction_type();
 	        switch(interaction) {
 	        case "Lclick":
 	        	try {
+	        		System.out.println("Finding element...");
 					s.wait(pattern, 5000);
+					
 				} catch (FindFailed e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

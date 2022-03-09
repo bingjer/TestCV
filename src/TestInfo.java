@@ -80,7 +80,6 @@ public class TestInfo {
 			PhaseInfo phase = new PhaseInfo();
 			for(String inner_key : inner_json_obj.keySet()) {
 				JsonElement inner_value = inner_json_obj.get(inner_key);
-				System.out.println("poop");
 				System.out.println(inner_value);
 
 				String inner_key_string = (String) inner_key;
