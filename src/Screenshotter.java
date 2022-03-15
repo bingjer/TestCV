@@ -43,7 +43,7 @@ public class Screenshotter implements Runnable   {
 	public void run() {
 		// TODO Auto-generated method stub
 		
-		System.out.println("Thread is running...");
+		 System.out.println("Thread is running...");
 		 System.out.println(interaction);
 		 System.out.println(phase_info_vec.size());
 		 System.out.println(index);

@@ -1,65 +1,56 @@
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Vector;
 
 import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.LayoutStyle.ComponentPlacement;
-
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-
 import javax.swing.JLabel;
-import java.awt.Font;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.border.EmptyBorder;
+import java.awt.Dialog.ModalityType;
 
+public class WelcomeDialog extends JDialog {
 
-
-public class WelcomeFrame extends JInternalFrame {
+	private final JPanel contentPanel = new JPanel();
 
 	/**
 	 * Launch the application.
+	 * 
+	 * 
 	 */
-	
-
-	/**
-	 * Create the frame.
-	 */
-	
 	
 	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					WelcomeFrame frame = new WelcomeFrame();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-		
-		System.out.println(Core.NATIVE_LIBRARY_NAME);
-		 System.loadLibrary("opencv_java455");
-			
-			ImageComparison test = new ImageComparison("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test3.png.png");
-			test.compareImages("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test3.png.png");
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					//MainFrame frame = new MainFrame();
+					//frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
 	}
-	private JFrame jFrame;
 	
-	public WelcomeFrame() {
-		jFrame = new JFrame("Welcome!");
-		jFrame.setAlwaysOnTop(true);
-		jFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		jFrame.setVisible(true);
+private JDialog jFrame;
+	
+	public WelcomeDialog(JFrame frame, Logger logs) {
+		jFrame = new JDialog(frame);
+		jFrame.setModalityType(ModalityType.APPLICATION_MODAL);
+		jFrame.setModal(true);
+		jFrame.setTitle("WelcomeFrame");
+		//jFrame.setVisible(true);
 		jFrame.setBounds(100, 100, 450, 300);
 		//contentPane.add(internalFrame, BorderLayout.CENTER);
 		
@@ -99,8 +90,10 @@ public class WelcomeFrame extends JInternalFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				dispose_frame();
-				TestFrame tFrame = new TestFrame();
+				//TestFrame tFrame = new TestFrame();
+				jFrame.dispose();
+				TestDialogue tFrame = new TestDialogue(frame, logs);
+				
 			}
 		});
 		
@@ -135,6 +128,7 @@ public class WelcomeFrame extends JInternalFrame {
 					.addGap(62))
 		);
 		jFrame.getContentPane().setLayout(groupLayout);
+		jFrame.setVisible(true);
 
 	}
 	
@@ -144,3 +138,5 @@ public class WelcomeFrame extends JInternalFrame {
 		jFrame.dispose();
 	}
 }
+
+

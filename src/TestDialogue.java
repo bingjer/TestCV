@@ -1,35 +1,34 @@
-
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Vector;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.border.EmptyBorder;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
-import javax.swing.LayoutStyle.ComponentPlacement;
-import javax.swing.JLabel;
-import java.awt.BorderLayout;
-import java.awt.List;
-
-import javax.swing.JTextPane;
-import javax.swing.JTextArea;
-import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.border.EmptyBorder;
 
-public class TestFrame extends JFrame {
+public class TestDialogue extends JDialog {
 
-	//protected static final String JLabel = null;
+	private final JPanel contentPanel = new JPanel();
+
+	/**
+	 * Launch the application.
+	 */
 	private JPanel contentPane;
 	private int counter;
-	private JFrame frame = new JFrame(); 
+	private JDialog frmTestRunner;
 	private Vector<PhaseInfo> phase_info_vec;
 	private JTextField txtField_url;
 
@@ -37,13 +36,17 @@ public class TestFrame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public TestFrame() {
+	public TestDialogue(JFrame dialog, Logger logs) {
+		frmTestRunner = new JDialog(dialog, ModalityType.APPLICATION_MODAL); 
+		frmTestRunner.setModal(true);
+		frmTestRunner.setTitle("Phase Frame");
 		phase_info_vec = new Vector<PhaseInfo>();
 		counter = 0;
 		setTitle("Add Test");
-		JFrame frmTestRunner = new JFrame();
+		//JFrame frmTestRunner = new JFrame();
+		frmTestRunner.setAlwaysOnTop(true);
 		frmTestRunner.setTitle("Test Runner");
-		frmTestRunner.setVisible(true);
+		
 		frmTestRunner.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frmTestRunner.setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -67,7 +70,7 @@ public class TestFrame extends JFrame {
 				// TODO Auto-generated method stub
 				PhaseInfo phase_info = new PhaseInfo();
 				String url = "test"; //txtField_url.getText();
-				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, phase_info, url, frmTestRunner);
+				//PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, phase_info, url, frmTestRunner);
 				System.out.println(phase_info.get_phase_name());
 //				boolean wasSuccessful = true;
 //				PhaseFrame phaseFrame = new PhaseFrame(phase_info, wasSuccessful);
@@ -128,9 +131,21 @@ public class TestFrame extends JFrame {
 		JButton run_btn = new JButton("Run");
 		run_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MainFrame frame = new MainFrame(phase_info_vec);
+				logs.set_logs("Success mcvest!");
 				frmTestRunner.dispose();
+//				while(true) {
+//					System.out.println("Sucesss twice.");
+//				}
 				//logs.set_logs("made it testframe 132");
+				long start = System.currentTimeMillis();
+				long finish = System.currentTimeMillis();
+				long elapsed = finish - start;
+				System.out.println(finish);
+				while(elapsed < 5000) {
+					finish = System.currentTimeMillis();
+					elapsed = finish - start;
+				}
+				System.out.println("Test");
 			}
 		});
 		
@@ -145,7 +160,7 @@ public class TestFrame extends JFrame {
 				String interaction = selected_phase.get_interaction_type();
 				String message = selected_phase.get_message();
 				String url = txtField_url.getText();
-				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction,message, frmTestRunner);
+				//PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction,message, frmTestRunner);
 				phase_info_vec.set(index, selected_phase);
 				phase_list.set(index, selected_phase.get_phase_name());
 				list.setModel(phase_list);
@@ -200,10 +215,11 @@ public class TestFrame extends JFrame {
 					.addContainerGap(135, Short.MAX_VALUE))
 		);
 		contentPane.setLayout(gl_contentPane);
+		frmTestRunner.setVisible(true);
 		
 	}
 	
-	public TestFrame(Vector<PhaseInfo> phase_info_vec) {
+	public TestDialogue(Vector<PhaseInfo> phase_info_vec) {
 		setTitle("Add Test");
 		JFrame frmTestRunner = new JFrame();
 		frmTestRunner.setTitle("Test Runner");
@@ -356,3 +372,4 @@ public class TestFrame extends JFrame {
 		
 	}
 }
+

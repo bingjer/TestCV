@@ -6,5 +6,9 @@ public class Logger {
 	public void set_logs(String step_log) {
 		this.step_log = step_log;
 	}
+	
+	public String get_logs() {
+		return step_log;
+	}
 
 }
