@@ -115,7 +115,7 @@ public class Screenshotter implements Runnable   {
 	        for(int i = 0; i < index; i++) {
 	        	
 	        	if(i == 0) {
-	        		driver.get("http://google.com");
+	        		driver.get("http://google.com"); // change to url in live
 	    	        driver.manage().window().maximize();
 	        	}
 	        	

@@ -291,6 +291,13 @@ public class TestFrame extends JFrame {
 		});
 		
 		JButton run_btn = new JButton("Run");
+		run_btn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				MainFrame frame = new MainFrame(phase_info_vec);
+				frmTestRunner.dispose();
+				//logs.set_logs("made it testframe 132");
+			}
+		});
 		
 		JButton view_phase_btn = new JButton("View Phase");
 		view_phase_btn.addActionListener(new ActionListener() {
