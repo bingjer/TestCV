@@ -48,7 +48,7 @@ public class WelcomeFrame extends JInternalFrame {
 		});
 		
 		System.out.println(Core.NATIVE_LIBRARY_NAME);
-		 System.loadLibrary("opencv_java455");
+		System.loadLibrary("opencv_java455");
 			
 //			ImageComparison test = new ImageComparison("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test3.png.png");
 //			test.compareImages("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test3.png.png");
@@ -56,6 +56,8 @@ public class WelcomeFrame extends JInternalFrame {
 //			ImageComparison test = new ImageComparison("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test3.png.png");
 //			test.compareImages("C:\\Users\\adamn\\OneDrive\\Documents\\tst.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test2.png.png");
 	}
+	
+	
 	private JFrame jFrame;
 	
 	public WelcomeFrame() {

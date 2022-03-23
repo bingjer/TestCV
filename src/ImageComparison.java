@@ -20,7 +20,7 @@ public class ImageComparison {
 	}
 	
 	
-	public void compareImages(String expected_image, String actual_img) {
+	public double[] compareImages(String expected_image, String actual_img) {
 		Mat expected = Imgcodecs.imread(expected_image);
 		Mat actual = Imgcodecs.imread(actual_img);
 		if (expected.empty() || actual.empty()) {
@@ -59,6 +59,9 @@ public class ImageComparison {
         System.out.println(chi_square);
         System.out.println(intersection);
         System.out.println(Bhattacharyya);
+        
+        double[] data = {correlation, chi_square, intersection, Bhattacharyya};
+        return data;
 		
 	}
 

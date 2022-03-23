@@ -1,6 +1,7 @@
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Vector;
 
@@ -8,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -23,15 +25,19 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JTextField;
+import javax.swing.JRadioButton;
 
 public class TestFrame extends JFrame {
 
 	//protected static final String JLabel = null;
 	private JPanel contentPane;
 	private int counter;
+	private String driver_loc;
 	private JFrame frame = new JFrame(); 
 	private Vector<PhaseInfo> phase_info_vec;
+	//private JTextField txtField_url;
 	private JTextField txtField_url;
+	private JTextField txtField_driver;
 
 	
 	/**
@@ -45,7 +51,7 @@ public class TestFrame extends JFrame {
 		frmTestRunner.setTitle("Test Runner");
 		frmTestRunner.setVisible(true);
 		frmTestRunner.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frmTestRunner.setBounds(100, 100, 450, 300);
+		frmTestRunner.setBounds(100, 100, 450, 341);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frmTestRunner.setContentPane(contentPane);
@@ -58,6 +64,15 @@ public class TestFrame extends JFrame {
 		
 		txtField_url = new JTextField();
 		txtField_url.setColumns(10);
+		
+		ButtonGroup btnGroup = new ButtonGroup();
+		
+		JRadioButton rdbtn_chrome = new JRadioButton("Chrome");
+		
+		JRadioButton rdbtn_firefox = new JRadioButton("FireFox");
+		
+		btnGroup.add(rdbtn_chrome);
+		btnGroup.add(rdbtn_firefox);
 		
 		JButton add_phase_btn = new JButton("Add Phase");
 		add_phase_btn.addActionListener(new ActionListener() {
@@ -128,7 +143,17 @@ public class TestFrame extends JFrame {
 		JButton run_btn = new JButton("Run");
 		run_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MainFrame frame = new MainFrame(phase_info_vec);
+				String driver_type = "";
+				if(rdbtn_chrome.isSelected()) {
+					driver_type = "chrome";
+				}
+				else if(rdbtn_firefox.isSelected()) {
+					driver_type = "firefox";
+				}
+				else {
+					//TODO: create notificaiton window that it needs to be selected
+				}
+				MainFrame frame = new MainFrame(txtField_url.getText(), txtField_driver.getText(), driver_type, phase_info_vec);
 				frmTestRunner.dispose();
 				//logs.set_logs("made it testframe 132");
 			}
@@ -156,6 +181,26 @@ public class TestFrame extends JFrame {
 		
 		txtField_url = new JTextField();
 		txtField_url.setColumns(10);
+		
+		
+		
+		JButton btn_driver = new JButton("Choose Driver");
+		btn_driver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser j = new JFileChooser();
+				j.showOpenDialog(null);
+				driver_loc = j.getSelectedFile().getAbsolutePath();
+				System.out.println(driver_loc);
+				txtField_driver.setText(driver_loc);
+
+			}
+		});
+		
+		JLabel lbl_driver = new JLabel("Driver:");
+		
+		txtField_driver = new JTextField();
+		txtField_driver.setEditable(false);
+		txtField_driver.setColumns(10);
 
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -163,44 +208,65 @@ public class TestFrame extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 194, GroupLayout.PREFERRED_SIZE)
-					.addGap(48)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+							.addComponent(run_btn)
+							.addPreferredGap(ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
+							.addComponent(save_test_btn))
+						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 194, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lbl_url)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(txtField_url, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE))
-						.addComponent(add_phase_btn)
-						.addComponent(delete_phase_btn)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtField_url, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))
 						.addComponent(view_phase_btn)
-						.addComponent(save_test_btn)
-						.addComponent(run_btn))
-					.addGap(10))
+						.addComponent(delete_phase_btn)
+						.addComponent(add_phase_btn)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(rdbtn_chrome)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(rdbtn_firefox))
+						.addComponent(btn_driver)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lbl_driver)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtField_driver, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-					.addGap(19)
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap(11, Short.MAX_VALUE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(lbl_url)
 								.addComponent(txtField_url, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(20)
+							.addGap(9)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(rdbtn_chrome)
+								.addComponent(rdbtn_firefox))
+							.addGap(8)
+							.addComponent(btn_driver)
+							.addPreferredGap(ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lbl_driver)
+								.addComponent(txtField_driver, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(12)
 							.addComponent(add_phase_btn)
-							.addGap(14)
-							.addComponent(delete_phase_btn)
 							.addGap(10)
+							.addComponent(delete_phase_btn)
+							.addGap(13)
 							.addComponent(view_phase_btn)
-							.addGap(17)
-							.addComponent(save_test_btn)
-							.addGap(4)
-							.addComponent(run_btn))
-						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(135, Short.MAX_VALUE))
-		);
-		contentPane.setLayout(gl_contentPane);
-		
+							.addGap(1)))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(run_btn)
+						.addComponent(save_test_btn)
+						)));
+					contentPane.setLayout(gl_contentPane);
 	}
 	
 	public TestFrame(Vector<PhaseInfo> phase_info_vec) {
@@ -209,7 +275,7 @@ public class TestFrame extends JFrame {
 		frmTestRunner.setTitle("Test Runner");
 		frmTestRunner.setVisible(true);
 		frmTestRunner.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frmTestRunner.setBounds(100, 100, 450, 300);
+		frmTestRunner.setBounds(100, 100, 450, 341);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frmTestRunner.setContentPane(contentPane);
@@ -228,6 +294,15 @@ public class TestFrame extends JFrame {
 		
 		txtField_url = new JTextField();
 		txtField_url.setColumns(10);
+		
+		ButtonGroup btnGroup = new ButtonGroup();
+		
+		JRadioButton rdbtn_chrome = new JRadioButton("Chrome");
+		
+		JRadioButton rdbtn_firefox = new JRadioButton("FireFox");
+		
+		btnGroup.add(rdbtn_chrome);
+		btnGroup.add(rdbtn_firefox);
 		
 		JButton add_phase_btn = new JButton("Add Phase");
 		add_phase_btn.addActionListener(new ActionListener() {
@@ -293,7 +368,17 @@ public class TestFrame extends JFrame {
 		JButton run_btn = new JButton("Run");
 		run_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				MainFrame frame = new MainFrame(phase_info_vec);
+				String driver_type = "";
+				if(rdbtn_chrome.isSelected()) {
+					driver_type = "chrome";
+				}
+				else if(rdbtn_firefox.isSelected()) {
+					driver_type = "firefox";
+				}
+				else {
+					//TODO: create notificaiton window that it needs to be selected
+				}
+				MainFrame frame = new MainFrame(txtField_url.getText(), txtField_driver.getText(), driver_type, phase_info_vec);
 				frmTestRunner.dispose();
 				//logs.set_logs("made it testframe 132");
 			}
@@ -318,48 +403,90 @@ public class TestFrame extends JFrame {
 		});
 
 		
+		
+		JButton btn_driver = new JButton("Choose Driver");
+		btn_driver.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser j = new JFileChooser();
+				j.showOpenDialog(null);
+				driver_loc = j.getSelectedFile().getAbsolutePath();
+				System.out.println(driver_loc);
+				txtField_driver.setText(driver_loc);
+
+			}
+		});
+		
+		
+		JLabel lbl_driver = new JLabel("Driver:");
+		
+		txtField_driver = new JTextField();
+		txtField_driver.setEditable(false);
+		txtField_driver.setColumns(10);
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 194, GroupLayout.PREFERRED_SIZE)
-					.addGap(48)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+							.addComponent(run_btn)
+							.addPreferredGap(ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
+							.addComponent(save_test_btn))
+						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 194, GroupLayout.PREFERRED_SIZE))
+					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lbl_url)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(txtField_url, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE))
-						.addComponent(add_phase_btn)
-						.addComponent(delete_phase_btn)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtField_url, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))
 						.addComponent(view_phase_btn)
-						.addComponent(save_test_btn)
-						.addComponent(run_btn))
-					.addGap(10))
+						.addComponent(delete_phase_btn)
+						.addComponent(add_phase_btn)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(rdbtn_chrome)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(rdbtn_firefox))
+						.addComponent(btn_driver)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lbl_driver)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(txtField_driver, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-					.addGap(19)
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap(11, Short.MAX_VALUE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(lbl_url)
 								.addComponent(txtField_url, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-							.addGap(20)
+							.addGap(9)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(rdbtn_chrome)
+								.addComponent(rdbtn_firefox))
+							.addGap(8)
+							.addComponent(btn_driver)
+							.addPreferredGap(ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lbl_driver)
+								.addComponent(txtField_driver, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(12)
 							.addComponent(add_phase_btn)
-							.addGap(14)
-							.addComponent(delete_phase_btn)
 							.addGap(10)
+							.addComponent(delete_phase_btn)
+							.addGap(13)
 							.addComponent(view_phase_btn)
-							.addGap(17)
-							.addComponent(save_test_btn)
-							.addGap(4)
-							.addComponent(run_btn))
-						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(135, Short.MAX_VALUE))
-		);
-		contentPane.setLayout(gl_contentPane);
+							.addGap(1)))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(run_btn)
+						.addComponent(save_test_btn)
+						)));
+					contentPane.setLayout(gl_contentPane);
 		
 	}
 }

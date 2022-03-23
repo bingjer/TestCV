@@ -56,14 +56,20 @@ public class MainFrame extends JFrame  {
 //	}
 	
 	Vector<PhaseInfo> phase_info_vec;
+	String url;
+	String driver_loc;
+	String driver_type;
 
 	/**
 	 * Create the frame.
 	 */
-	public MainFrame(Vector<PhaseInfo> phase_info_vec) {
-		this.phase_info_vec = phase_info_vec;
-		
+	public MainFrame(String url, String driver_loc, String driver_type, Vector<PhaseInfo> phase_info_vec) {
+		this.phase_info_vec = phase_info_vec;	
+		this.url = url;
+		this.driver_loc = driver_loc;
+		this.driver_type = driver_type;
 		initialize();
+		
 	}
 	
 	private void initialize() {
@@ -97,13 +103,13 @@ public class MainFrame extends JFrame  {
 
 		JScrollPane scrollpane = new JScrollPane(list);
 		
-		int counter = 0; 
-		
-		for (PhaseInfo phase : phase_info_vec) {
-			logs.add(counter, phase.get_phase_name());
-			list.setModel(logs);
-			counter++;
-		}
+//		int counter = 0; 
+//		
+//		for (PhaseInfo phase : phase_info_vec) {
+//			logs.add(counter, phase.get_phase_name());
+//			list.setModel(logs);
+//			counter++;
+//		}
 		
 		
 		
@@ -163,11 +169,15 @@ public class MainFrame extends JFrame  {
 //		ImageComparison test = new ImageComparison("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test3.png.png");
 //		test.compareImages("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png");
 		
-		Driver ss = new Driver(phase_info_vec);
+		Driver ss = new Driver(phase_info_vec, logs, list, url, driver_loc, driver_type);
 		
 		Thread t = new Thread(ss);
 		t.start();
 	}
+	
+	
+	
+	
 	
 	public void screenshot() {
 		WebDriver driver;
@@ -192,7 +202,7 @@ public class MainFrame extends JFrame  {
 	        for(int i = 0; i < phase_info_vec.size(); i++) {
 	        	System.out.println(phase_info_vec.size());
 	        	if(i == 0) {
-	        		driver.get("http://google.com"); // change to url in live
+	        		driver.get(url); // change to url in live
 	    	        driver.manage().window().maximize();
 	        	}
 	        	
@@ -265,7 +275,7 @@ public class MainFrame extends JFrame  {
 		        
 		        //compare the two images
 		        ImageComparison test = new ImageComparison(phase_info_vec.get(i).get_screenshot(), file_name);
-				test.compareImages(phase_info_vec.get(i).get_screenshot(), file_name);
+				
 				
 		        
 	        }

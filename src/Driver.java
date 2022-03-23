@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
+import javax.swing.DefaultListModel;
+import javax.swing.JList;
+import javax.swing.JScrollPane;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
@@ -19,28 +22,55 @@ import org.sikuli.script.FindFailed;
 import org.sikuli.script.Pattern;
 import org.sikuli.script.Screen;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class Driver implements Runnable   {
 	
 	private String file_name;
-	private String url;
 	private Vector<PhaseInfo> phase_info_vec;
 	private int index;
 	private String interaction;
 	private String element;
+	private int counter = 0; 
+	private DefaultListModel logs;
+	private JList list;
+	private String url;
+	private String driver_loc;
+	private String driver_type;
 	
-	public Driver(Vector<PhaseInfo> phase_info_vec) {
+	
+	public Driver(Vector<PhaseInfo> phase_info_vec, DefaultListModel logs, JList list, String url, String driver_loc, String driver_type) {
 		this.file_name = file_name;
 		this.phase_info_vec = phase_info_vec;
+		this.counter = 0;
+		this.logs = logs;
+		this.list = list;
+		this.url = url;
+		this.driver_loc = driver_loc;
+		this.driver_type = driver_type;
+		
 	}
 	
 
 	@Override
 	public void run() {
 		WebDriver driver;
-		System.setProperty("webdriver.chrome.driver", "D:\\Downloads\\chromedriver_98.exe");
-        driver = new ChromeDriver();
-        System.out.println(phase_info_vec.size());
+		//System.setProperty("webdriver.chrome.driver", "D:\\Downloads\\chromedriver_98.exe");
+		if(driver_type.equals("chrome")) {
+			System.setProperty("webdriver.chrome.driver", driver_loc);
+	        driver = new ChromeDriver();
+		} 
+		else if (driver_type.equals("firefox")){
+			System.setProperty("webdriver.gecko.driver", driver_loc);
+	        driver = new FirefoxDriver();
+		}
+		else {
+			driver = null;
+		}
+		
+//		System.setProperty("webdriver.chrome.driver", driver_loc);
+//        driver = new ChromeDriver();
+        //System.out.println(phase_info_vec.size());
         
 			//driver.get(url);
 			//driver.get("http://google.com");
@@ -52,18 +82,32 @@ public class Driver implements Runnable   {
 	        //s.type(fileInputTextBox, inputFilePath + "Test.docx");
 	       // s.click(openButton);
 
-	        System.out.println("Line 111.");
 	        Screen s = new Screen();
-	        System.out.println("Line 113.");
+	        
+	        int run_counter = 0;
+	        
+	        logs.add(counter, "Starting run number: " + run_counter);
+			list.setModel(logs);
+			counter++;
+			run_counter++;
 	        
 	        for(int i = 0; i < phase_info_vec.size(); i++) {
 	        	
 	        	System.out.println(phase_info_vec.size());
 	        	System.out.println(phase_info_vec.get(i).get_screenshot());
 	        	if(i == 0) {
-	        		driver.get("http://google.com"); // change to url in live
+	        		//driver.get("http://google.com"); // change to url in live
+	        		driver.get(url);
 	    	        driver.manage().window().maximize();
+	    	        //TODO: change to url or phase
+	    	        logs.add(counter, "Opening web page at: " + url);
+	    			list.setModel(logs);
+	    			counter++;
 	        	}
+	        	
+	        	logs.add(counter, "Starting phase: " + phase_info_vec.get(i).get_phase_name());
+				list.setModel(logs);
+				counter++;
 	        	
 
 	        	//Pattern pattern = new Pattern(phase.get_element());
@@ -135,8 +179,28 @@ public class Driver implements Runnable   {
 //		        ImageComparison test = new ImageComparison("C:\\Users\\adamn\\OneDrive\\Documents\\tst.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test2.png.png");
 //				test.compareImages("C:\\Users\\adamn\\OneDrive\\Documents\\tst.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test2.png.png");
 		        
+		        //DefaultListModel logs = new DefaultListModel();
+
+				
+				//JList list = new JList(logs);
+
+				//JScrollPane scrollpane = new JScrollPane(list);
+				
+				
+				
+		        
+				
+				
+		        
 		        ImageComparison test = new ImageComparison(phase_info_vec.get(i).get_screenshot(), screenShot.getAbsolutePath());
-				test.compareImages(phase_info_vec.get(i).get_screenshot(), screenShot.getAbsolutePath());
+
+				double[] data = test.compareImages(phase_info_vec.get(i).get_screenshot(), screenShot.getAbsolutePath());
+				
+				double correlation_pct = data[0] * 100;
+				
+				logs.add(counter, "The images were " + correlation_pct + "% similar.");
+				list.setModel(logs);
+				counter++;
 //				
 		        
 	        }
