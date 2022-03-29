@@ -35,6 +35,7 @@ public class TestInfo {
 			inner_obj.addProperty("Screenshot", phase.get_screenshot());
 			inner_obj.addProperty("Interaction", phase.get_interaction_type());
 			inner_obj.addProperty("Message", phase.get_message());
+			inner_obj.addProperty("Time", phase.get_wait_time());
 			
 			//JSONObject inner_json_obj = new JSONObject();
 			String string_counter = String.valueOf(counter);
@@ -101,6 +102,9 @@ public class TestInfo {
 					break;
 				case "Message":
 					phase.set_message(inner_value_string);
+					break;
+				case "Time":
+					phase.set_wait_time(Integer.parseInt(inner_value_string));
 					break;
 				default:
 					break;

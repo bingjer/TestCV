@@ -5,6 +5,7 @@ public class PhaseInfo {
 	private String interaction_type;
 	private String phase_name;
 	private String message;
+	private int wait_time;
 	
 	public PhaseInfo() {
 		this.element_path = "";
@@ -12,6 +13,7 @@ public class PhaseInfo {
 		this.interaction_type = "";
 		this.phase_name = "";
 		this.message = "";
+		this.wait_time = 0;
 	}
 	
 	public void set_element_path(String element_path) {
@@ -32,6 +34,10 @@ public class PhaseInfo {
 	
 	public void set_message(String message) {
 		this.message = message;
+	}
+	
+	public void set_wait_time(int seconds) {
+		this.wait_time = seconds;
 	}
 	
 	public String get_phase_name() {
@@ -55,6 +61,9 @@ public class PhaseInfo {
 		return message;
 	}
 	
+	public int get_wait_time() {
+		return wait_time;
+	}
 	
 
 }

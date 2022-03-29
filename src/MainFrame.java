@@ -59,15 +59,17 @@ public class MainFrame extends JFrame  {
 	String url;
 	String driver_loc;
 	String driver_type;
+	int run_counter;
 
 	/**
 	 * Create the frame.
 	 */
-	public MainFrame(String url, String driver_loc, String driver_type, Vector<PhaseInfo> phase_info_vec) {
+	public MainFrame(int run_counter, String url, String driver_loc, String driver_type, Vector<PhaseInfo> phase_info_vec) {
 		this.phase_info_vec = phase_info_vec;	
 		this.url = url;
 		this.driver_loc = driver_loc;
 		this.driver_type = driver_type;
+		this.run_counter = run_counter;
 		initialize();
 		
 	}
@@ -168,11 +170,12 @@ public class MainFrame extends JFrame  {
 //		
 //		ImageComparison test = new ImageComparison("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test3.png.png");
 //		test.compareImages("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png");
+		System.out.println("no issue yet");
+			Driver ss = new Driver(run_counter, phase_info_vec, logs, list, url, driver_loc, driver_type);
+			Thread t = new Thread(ss);
+			t.start();
+			run_counter--;
 		
-		Driver ss = new Driver(phase_info_vec, logs, list, url, driver_loc, driver_type);
-		
-		Thread t = new Thread(ss);
-		t.start();
 	}
 	
 	

@@ -26,6 +26,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JTextField;
 import javax.swing.JRadioButton;
+import javax.swing.JSpinner;
 
 public class TestFrame extends JFrame {
 
@@ -37,6 +38,7 @@ public class TestFrame extends JFrame {
 	private Vector<PhaseInfo> phase_info_vec;
 	//private JTextField txtField_url;
 	private JTextField txtField_url;
+	private JTextField txtField_url_1;
 	private JTextField txtField_driver;
 
 	
@@ -73,6 +75,10 @@ public class TestFrame extends JFrame {
 		
 		btnGroup.add(rdbtn_chrome);
 		btnGroup.add(rdbtn_firefox);
+		
+		JLabel lbl_runs = new JLabel("Runs:");
+		
+		JSpinner spinner = new JSpinner();
 		
 		JButton add_phase_btn = new JButton("Add Phase");
 		add_phase_btn.addActionListener(new ActionListener() {
@@ -153,7 +159,7 @@ public class TestFrame extends JFrame {
 				else {
 					//TODO: create notificaiton window that it needs to be selected
 				}
-				MainFrame frame = new MainFrame(txtField_url.getText(), txtField_driver.getText(), driver_type, phase_info_vec);
+				MainFrame frame = new MainFrame((int) spinner.getValue(), txtField_url.getText(), txtField_driver.getText(), driver_type, phase_info_vec);
 				frmTestRunner.dispose();
 				//logs.set_logs("made it testframe 132");
 			}
@@ -179,8 +185,8 @@ public class TestFrame extends JFrame {
 		
 		JLabel lbl_url = new JLabel("URL:");
 		
-		txtField_url = new JTextField();
-		txtField_url.setColumns(10);
+		txtField_url_1 = new JTextField();
+		txtField_url_1.setColumns(10);
 		
 		
 		
@@ -201,6 +207,8 @@ public class TestFrame extends JFrame {
 		txtField_driver = new JTextField();
 		txtField_driver.setEditable(false);
 		txtField_driver.setColumns(10);
+		
+		
 
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -208,18 +216,20 @@ public class TestFrame extends JFrame {
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-							.addComponent(run_btn)
-							.addPreferredGap(ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-							.addComponent(save_test_btn))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lbl_runs)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(spinner, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(run_btn))
 						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 194, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lbl_url)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtField_url, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))
+							.addComponent(txtField_url_1, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))
 						.addComponent(view_phase_btn)
 						.addComponent(delete_phase_btn)
 						.addComponent(add_phase_btn)
@@ -231,26 +241,27 @@ public class TestFrame extends JFrame {
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lbl_driver)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtField_driver, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(txtField_driver, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE))
+						.addComponent(save_test_btn))
 					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(11, Short.MAX_VALUE)
+					.addContainerGap(30, Short.MAX_VALUE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(lbl_url)
-								.addComponent(txtField_url, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addComponent(txtField_url_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 							.addGap(9)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(rdbtn_chrome)
 								.addComponent(rdbtn_firefox))
 							.addGap(8)
 							.addComponent(btn_driver)
-							.addPreferredGap(ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lbl_driver)
 								.addComponent(txtField_driver, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -263,9 +274,11 @@ public class TestFrame extends JFrame {
 							.addGap(1)))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(run_btn)
+						.addComponent(lbl_runs)
 						.addComponent(save_test_btn)
-						)));
+						.addComponent(run_btn)
+						.addComponent(spinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+		);
 					contentPane.setLayout(gl_contentPane);
 	}
 	
@@ -295,11 +308,21 @@ public class TestFrame extends JFrame {
 		txtField_url = new JTextField();
 		txtField_url.setColumns(10);
 		
+		JLabel lbl_runs = new JLabel("Runs:");
+		
+		JSpinner spinner = new JSpinner();
+		
 		ButtonGroup btnGroup = new ButtonGroup();
 		
 		JRadioButton rdbtn_chrome = new JRadioButton("Chrome");
 		
 		JRadioButton rdbtn_firefox = new JRadioButton("FireFox");
+		
+		JLabel lbl_driver = new JLabel("Driver:");
+		
+		txtField_driver = new JTextField();
+		txtField_driver.setEditable(false);
+		txtField_driver.setColumns(10);
 		
 		btnGroup.add(rdbtn_chrome);
 		btnGroup.add(rdbtn_firefox);
@@ -378,7 +401,15 @@ public class TestFrame extends JFrame {
 				else {
 					//TODO: create notificaiton window that it needs to be selected
 				}
-				MainFrame frame = new MainFrame(txtField_url.getText(), txtField_driver.getText(), driver_type, phase_info_vec);
+				int test = (int) spinner.getValue();
+				System.out.println("poopcheck");
+				System.out.println(test);
+				System.out.println("poopcheck");
+				System.out.println(txtField_url.getText());
+				System.out.println("poopcheck");
+				System.out.println(driver_type);
+				System.out.println("poopcheck");
+				MainFrame frame = new MainFrame(test, txtField_url.getText(), txtField_driver.getText(), driver_type, phase_info_vec);
 				frmTestRunner.dispose();
 				//logs.set_logs("made it testframe 132");
 			}
@@ -417,22 +448,22 @@ public class TestFrame extends JFrame {
 		});
 		
 		
-		JLabel lbl_driver = new JLabel("Driver:");
 		
-		txtField_driver = new JTextField();
-		txtField_driver.setEditable(false);
-		txtField_driver.setColumns(10);
+		
+		
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
-							.addComponent(run_btn)
-							.addPreferredGap(ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-							.addComponent(save_test_btn))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lbl_runs)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(spinner, GroupLayout.PREFERRED_SIZE, 43, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(run_btn))
 						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 194, GroupLayout.PREFERRED_SIZE))
 					.addGap(18)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -451,13 +482,14 @@ public class TestFrame extends JFrame {
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addComponent(lbl_driver)
 							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(txtField_driver, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(txtField_driver, GroupLayout.PREFERRED_SIZE, 155, GroupLayout.PREFERRED_SIZE))
+						.addComponent(save_test_btn))
 					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(11, Short.MAX_VALUE)
+					.addContainerGap(30, Short.MAX_VALUE)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 220, GroupLayout.PREFERRED_SIZE)
 						.addGroup(gl_contentPane.createSequentialGroup()
@@ -470,7 +502,7 @@ public class TestFrame extends JFrame {
 								.addComponent(rdbtn_firefox))
 							.addGap(8)
 							.addComponent(btn_driver)
-							.addPreferredGap(ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+							.addPreferredGap(ComponentPlacement.RELATED, 31, Short.MAX_VALUE)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(lbl_driver)
 								.addComponent(txtField_driver, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -483,9 +515,11 @@ public class TestFrame extends JFrame {
 							.addGap(1)))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(run_btn)
+						.addComponent(lbl_runs)
 						.addComponent(save_test_btn)
-						)));
+						.addComponent(run_btn)
+						.addComponent(spinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+		);
 					contentPane.setLayout(gl_contentPane);
 		
 	}

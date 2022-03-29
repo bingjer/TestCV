@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
+import java.util.concurrent.CountDownLatch;
 
 import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
@@ -37,9 +38,10 @@ public class Driver implements Runnable   {
 	private String url;
 	private String driver_loc;
 	private String driver_type;
+	private int test_run_counter;
 	
 	
-	public Driver(Vector<PhaseInfo> phase_info_vec, DefaultListModel logs, JList list, String url, String driver_loc, String driver_type) {
+	public Driver(int test_run_counter, Vector<PhaseInfo> phase_info_vec, DefaultListModel logs, JList list, String url, String driver_loc, String driver_type) {
 		this.file_name = file_name;
 		this.phase_info_vec = phase_info_vec;
 		this.counter = 0;
@@ -48,12 +50,14 @@ public class Driver implements Runnable   {
 		this.url = url;
 		this.driver_loc = driver_loc;
 		this.driver_type = driver_type;
+		this.test_run_counter = test_run_counter;
 		
 	}
 	
 
 	@Override
 	public void run() {
+		while(test_run_counter > 0) {
 		WebDriver driver;
 		//System.setProperty("webdriver.chrome.driver", "D:\\Downloads\\chromedriver_98.exe");
 		if(driver_type.equals("chrome")) {
@@ -84,6 +88,8 @@ public class Driver implements Runnable   {
 
 	        Screen s = new Screen();
 	        
+	        
+	        
 	        int run_counter = 0;
 	        
 	        logs.add(counter, "Starting run number: " + run_counter);
@@ -92,7 +98,21 @@ public class Driver implements Runnable   {
 			run_counter++;
 	        
 	        for(int i = 0; i < phase_info_vec.size(); i++) {
-	        	
+//	        	if(phase_info_vec.get(i).get_wait_time() != 0) {
+//	        		synchronized(this) {
+//	    	        	try {
+//		        			System.out.println("waiting");
+//
+//	    					this.wait(phase_info_vec.get(i).get_wait_time() * 1000);
+//		        			System.out.println("has it been 5 sec?");
+//
+//	    				} catch (InterruptedException e) {
+//	    					// TODO Auto-generated catch block
+//	    					e.printStackTrace();
+//	    				}
+//	    	        }
+//
+//	        	}
 	        	System.out.println(phase_info_vec.size());
 	        	System.out.println(phase_info_vec.get(i).get_screenshot());
 	        	if(i == 0) {
@@ -117,6 +137,21 @@ public class Driver implements Runnable   {
 		        String interaction_type = phase_info_vec.get(i).get_interaction_type();
 		        
 		        System.out.println(interaction_type);
+		        if(phase_info_vec.get(i).get_wait_time() != 0) {
+	        		synchronized(this) {
+	    	        	try {
+		        			System.out.println("waiting");
+
+	    					this.wait(phase_info_vec.get(i).get_wait_time() * 1000);
+		        			System.out.println("has it been 5 sec?");
+
+	    				} catch (InterruptedException e) {
+	    					// TODO Auto-generated catch block
+	    					e.printStackTrace();
+	    				}
+	    	        }
+
+	        	}
 		        switch(interaction_type) {
 		        case "Lclick":
 		        	try {
@@ -206,8 +241,10 @@ public class Driver implements Runnable   {
 	        }
 	        
 	        driver.quit();
+	        test_run_counter--;
 	        
-	       
 		}
+		}
+	
 
 }

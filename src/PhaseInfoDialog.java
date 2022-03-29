@@ -19,6 +19,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import java.awt.Dialog.ModalityType;
+import javax.swing.JSpinner;
 
 public class PhaseInfoDialog extends JDialog {
 
@@ -52,7 +53,7 @@ public class PhaseInfoDialog extends JDialog {
 		dialog.setModal(true);
 		dialog.setTitle("Phase Frame");
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		dialog.setBounds(100, 100, 531, 415);
+		dialog.setBounds(100, 100, 562, 464);
 		contentPanel = new JPanel();
 //		dialog.getContentPane().setLayout(new BorderLayout());
 //		dialog.setContentPane(contentPanel);
@@ -65,17 +66,31 @@ public class PhaseInfoDialog extends JDialog {
 		txtField_phaseName = new JTextField();
 		txtField_phaseName.setColumns(10);
 		
+		
+		JButton btn_upload = new JButton("Upload");
+		
+		JLabel lbl_or = new JLabel("Or");
+		
+		JSpinner spinner = new JSpinner();
+		
+		JLabel lbl_delay = new JLabel("Delay:");
+		
 		ButtonGroup btnGroup = new ButtonGroup();
 		
 		JRadioButton rdbtn_lClick = new JRadioButton("Left Click");
 		
 		JRadioButton rdbtn_rClick = new JRadioButton("Right Click");
 		
+		JRadioButton rdbtn_wait = new JRadioButton("Wait");
+		
 		JRadioButton rdbtn_type = new JRadioButton("Type:");
+		
+		
 		
 		btnGroup.add(rdbtn_lClick);
 		btnGroup.add(rdbtn_rClick);
 		btnGroup.add(rdbtn_type);
+		btnGroup.add(rdbtn_wait);
 		
 		JButton btnNewButton = new JButton("Ok");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -83,11 +98,13 @@ public class PhaseInfoDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				String text = txtField_phaseName.getText();
 				String element = txtField_addElement.getText();
-				String expected = textField_takeScreenshot.getText();
+				String expected = textField_takeScreenshot.getText() + ".png";
+				int wait_time = (int) spinner.getValue();
+				phase_info.set_wait_time(wait_time);
 				phase_info.set_phase_name(text);
 				phase_info.set_element_path(element);
 				phase_info.set_expected_path(expected);
-				//System.out.println(phase_info.get_phase_name());
+				System.out.println(phase_info.get_screenshot());
 				
 				if (rdbtn_lClick.isSelected()) {
 					phase_info.set_interaction_type("Lclick");
@@ -164,34 +181,52 @@ public class PhaseInfoDialog extends JDialog {
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(47)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblPhaseName)
-							.addContainerGap())
+							.addGap(47)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblPhaseName)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addComponent(btn_addElement)
+												.addComponent(lbl_interaction))
+											.addGap(20))
+										.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+											.addComponent(lbl_delay)
+											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+											.addComponent(spinner, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
+											.addGap(22)))
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addComponent(txtField_addElement, GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)
+												.addComponent(txtField_phaseName, GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE)))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGap(24)
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addComponent(btnNewButton)
+												.addComponent(rdbtn_type, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+												.addComponent(rdbtn_lClick)
+												.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, 178, GroupLayout.PREFERRED_SIZE)
+												.addComponent(rdbtn_wait)
+												.addComponent(rdbtn_rClick, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE))
+											.addPreferredGap(ComponentPlacement.RELATED)))
+									.addGap(148)))
+							.addGap(38))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(btn_addElement)
-								.addComponent(btn_takeScreenShot)
-								.addComponent(lbl_interaction))
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+							.addGap(103)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(26)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(txtField_addElement, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-										.addComponent(textField_takeScreenshot, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-										.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(txtField_phaseName, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(24)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(rdbtn_rClick, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-										.addComponent(rdbtn_lClick)
-										.addComponent(rdbtn_type, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-											.addComponent(btnNewButton)
-											.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, 178, GroupLayout.PREFERRED_SIZE)))))
-							.addGap(143))))
+									.addComponent(btn_upload)
+									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(lbl_or)
+									.addGap(53)
+									.addComponent(btn_takeScreenShot))
+								.addComponent(textField_takeScreenshot, GroupLayout.PREFERRED_SIZE, 301, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -204,25 +239,31 @@ public class PhaseInfoDialog extends JDialog {
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btn_addElement)
 						.addComponent(txtField_addElement, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
+					.addGap(22)
+					.addComponent(textField_takeScreenshot, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btn_upload)
 						.addComponent(btn_takeScreenShot)
-						.addComponent(textField_takeScreenshot, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(13)
+						.addComponent(lbl_or))
+					.addGap(9)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lbl_interaction)
 						.addComponent(rdbtn_lClick))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(rdbtn_rClick)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+							.addComponent(spinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lbl_delay))
+						.addComponent(rdbtn_rClick))
 					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(rdbtn_wait)
+					.addPreferredGap(ComponentPlacement.RELATED, 2, Short.MAX_VALUE)
 					.addComponent(rdbtn_type)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(btnNewButton)
-					.addContainerGap(15, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnNewButton))
 		);
 		contentPanel.setLayout(groupLayout);
 		dialog.setVisible(true);
@@ -256,7 +297,7 @@ public class PhaseInfoDialog extends JDialog {
 		dialog.setModal(true);
 		dialog.setTitle("Phase Frame");
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		dialog.setBounds(100, 100, 531, 415);
+		dialog.setBounds(100, 100, 562, 464);
 		contentPanel = new JPanel();
 //		dialog.getContentPane().setLayout(new BorderLayout());
 //		dialog.setContentPane(contentPanel);
@@ -269,17 +310,30 @@ public class PhaseInfoDialog extends JDialog {
 		txtField_phaseName = new JTextField();
 		txtField_phaseName.setColumns(10);
 		
+		JButton btn_upload = new JButton("Upload");
+		
+		JLabel lbl_or = new JLabel("Or");
+		
+		JSpinner spinner = new JSpinner();
+		
+		JLabel lbl_delay = new JLabel("Delay:");
+		
 		ButtonGroup btnGroup = new ButtonGroup();
 		
 		JRadioButton rdbtn_lClick = new JRadioButton("Left Click");
 		
 		JRadioButton rdbtn_rClick = new JRadioButton("Right Click");
 		
+		JRadioButton rdbtn_wait = new JRadioButton("Wait");
+		
 		JRadioButton rdbtn_type = new JRadioButton("Type:");
+		
+		
 		
 		btnGroup.add(rdbtn_lClick);
 		btnGroup.add(rdbtn_rClick);
 		btnGroup.add(rdbtn_type);
+		btnGroup.add(rdbtn_wait);
 		
 		JButton btnNewButton = new JButton("Done");
 		btnNewButton.addActionListener(new ActionListener() {
@@ -287,10 +341,12 @@ public class PhaseInfoDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				String text = txtField_phaseName.getText();
 				String element = txtField_addElement.getText();
-				String expected = textField_takeScreenshot.getText();
+				String expected = textField_takeScreenshot.getText() + ".png";
+				int wait_time = (int) spinner.getValue();
 				phase_info.set_phase_name(text);
 				phase_info.set_element_path(element);
 				phase_info.set_expected_path(expected);
+				phase_info.set_wait_time(wait_time);
 				//System.out.println(phase_info.get_phase_name());
 				
 				if (rdbtn_lClick.isSelected()) {
@@ -363,8 +419,6 @@ public class PhaseInfoDialog extends JDialog {
 		textField_takeScreenshot.setEditable(false);
 		textField_takeScreenshot.setColumns(10);
 		
-		JProgressBar progressBar = new JProgressBar();
-		
 		JLabel lbl_interaction = new JLabel("Interaction:");
 		
 		
@@ -374,38 +428,62 @@ public class PhaseInfoDialog extends JDialog {
 		
 		
 		
+		
+		
+		
+		
+		
+		
 		GroupLayout groupLayout = new GroupLayout(contentPanel);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(47)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(lblPhaseName)
-							.addContainerGap())
+							.addGap(47)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblPhaseName)
+								.addGroup(groupLayout.createSequentialGroup()
+									.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addComponent(btn_addElement)
+												.addComponent(lbl_interaction))
+											.addGap(20))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addComponent(lbl_delay)
+											.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+											.addComponent(spinner, GroupLayout.PREFERRED_SIZE, 38, GroupLayout.PREFERRED_SIZE)
+											.addGap(22)))
+									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+										.addGroup(groupLayout.createSequentialGroup()
+											.addPreferredGap(ComponentPlacement.RELATED)
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addComponent(txtField_addElement, GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)
+												.addComponent(txtField_phaseName, GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE)))
+										.addGroup(groupLayout.createSequentialGroup()
+											.addGap(24)
+											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addComponent(rdbtn_lClick)
+												.addComponent(rdbtn_wait)
+												.addComponent(rdbtn_rClick, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+												.addComponent(rdbtn_type, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+												.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, 178, GroupLayout.PREFERRED_SIZE)
+												.addComponent(btnNewButton))
+											.addPreferredGap(ComponentPlacement.RELATED)))
+									.addGap(148)))
+							.addGap(38))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(btn_addElement)
-								.addComponent(btn_takeScreenShot)
-								.addComponent(lbl_interaction))
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+							.addGap(103)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(26)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(txtField_addElement, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-										.addComponent(textField_takeScreenshot, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)
-										.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(txtField_phaseName, GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE)))
-								.addGroup(groupLayout.createSequentialGroup()
-									.addGap(24)
-									.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-										.addComponent(rdbtn_rClick, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-										.addComponent(rdbtn_lClick)
-										.addComponent(rdbtn_type, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-											.addComponent(btnNewButton)
-											.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, 178, GroupLayout.PREFERRED_SIZE)))))
-							.addGap(143))))
+									.addComponent(btn_upload)
+									.addPreferredGap(ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+									.addComponent(lbl_or)
+									.addGap(53)
+									.addComponent(btn_takeScreenShot))
+								.addComponent(textField_takeScreenshot, GroupLayout.PREFERRED_SIZE, 301, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -418,25 +496,32 @@ public class PhaseInfoDialog extends JDialog {
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(btn_addElement)
 						.addComponent(txtField_addElement, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
+					.addGap(22)
+					.addComponent(textField_takeScreenshot, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+						.addComponent(btn_upload)
 						.addComponent(btn_takeScreenShot)
-						.addComponent(textField_takeScreenshot, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-					.addGap(18)
-					.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(13)
+						.addComponent(lbl_or))
+					.addGap(9)
 					.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
 						.addComponent(lbl_interaction)
 						.addComponent(rdbtn_lClick))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(rdbtn_rClick)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createParallelGroup(Alignment.BASELINE)
+							.addComponent(spinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lbl_delay))
+						.addComponent(rdbtn_rClick))
 					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(rdbtn_wait)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(rdbtn_type)
-					.addPreferredGap(ComponentPlacement.RELATED)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addComponent(btnNewButton)
-					.addContainerGap(15, Short.MAX_VALUE))
+					.addContainerGap(30, Short.MAX_VALUE))
 		);
 		contentPanel.setLayout(groupLayout);
 		dialog.setVisible(true);
