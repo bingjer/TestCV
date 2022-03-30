@@ -63,7 +63,7 @@ public class WelcomeFrame extends JInternalFrame {
 	public WelcomeFrame() {
 		jFrame = new JFrame("Welcome!");
 		jFrame.setAlwaysOnTop(true);
-		jFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		jFrame.setVisible(true);
 		jFrame.setBounds(100, 100, 450, 300);
 		//contentPane.add(internalFrame, BorderLayout.CENTER);

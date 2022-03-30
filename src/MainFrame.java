@@ -1,6 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Vector;
 
@@ -30,9 +32,12 @@ import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class MainFrame extends JFrame  {
 
@@ -144,13 +149,41 @@ public class MainFrame extends JFrame  {
 		);
 		
 		JButton btnNewButton = new JButton("Save Logs");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser j = new JFileChooser();
+				j.showSaveDialog(null);
+				String file = j.getSelectedFile().getAbsolutePath();
+				System.out.println(file);
+				System.out.println(logs.toString());
+				try {
+					
+					BufferedWriter  writer = new BufferedWriter(new FileWriter(file, true));
+
+					for(int i =0; i < logs.size(); i++) {
+						writer.write(logs.toArray()[i].toString());
+						writer.newLine();
+						
+					}
+					writer.close();
+				}
+				catch (IOException e1) {
+				      System.out.println("An error occurred.");
+				      e1.printStackTrace();
+				}
+				
+			}
+		});
 		toolBar.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("New Test");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				WelcomeFrame wcframe = new WelcomeFrame();
+				frame.dispose();
+			}
+		});
 		toolBar.add(btnNewButton_1);
-		
-		JButton btnNewButton_2 = new JButton("Load Test");
-		toolBar.add(btnNewButton_2);
 		contentPane.setLayout(gl_contentPane);
 		frame.setVisible(true);
 		
