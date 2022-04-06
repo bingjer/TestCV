@@ -17,6 +17,9 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.stream.MalformedJsonException;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.SwingConstants;
@@ -24,17 +27,9 @@ import javax.swing.SwingConstants;
 
 
 public class WelcomeFrame extends JInternalFrame {
+	
+	private JFrame jFrame;
 
-	/**
-	 * Launch the application.
-	 */
-	
-
-	/**
-	 * Create the frame.
-	 */
-	
-	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -49,16 +44,10 @@ public class WelcomeFrame extends JInternalFrame {
 		
 		System.out.println(Core.NATIVE_LIBRARY_NAME);
 		System.loadLibrary("opencv_java455");
-			
-//			ImageComparison test = new ImageComparison("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test3.png.png");
-//			test.compareImages("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test3.png.png");
-			
-//			ImageComparison test = new ImageComparison("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test3.png.png");
-//			test.compareImages("C:\\Users\\adamn\\OneDrive\\Documents\\tst.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test2.png.png");
 	}
 	
 	
-	private JFrame jFrame;
+	
 	
 	public WelcomeFrame() {
 		jFrame = new JFrame("Welcome!");
@@ -73,28 +62,28 @@ public class WelcomeFrame extends JInternalFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				JFileChooser j = new JFileChooser();
-				j.showOpenDialog(null);
-				String file = j.getSelectedFile().getAbsolutePath();
-				System.out.println(file);
-				Vector<PhaseInfo> phase_vec = new Vector<PhaseInfo>();
-				TestInfo test = new TestInfo();
 				try {
+					JFileChooser j = new JFileChooser();
+					j.showOpenDialog(null);
+					String file = j.getSelectedFile().getAbsolutePath();
+					System.out.println(file);
+					
+					
+					Vector<PhaseInfo> phase_vec = new Vector<PhaseInfo>();
+					TestInfo test = new TestInfo();
 					test.load_json(file, phase_vec);
-				} catch (FileNotFoundException e1) {
+					TestFrame tFrame = new TestFrame(phase_vec);
+					jFrame.dispose();
+					
+				} catch (JsonSyntaxException err) {
+					err.printStackTrace();
+					NotifyFrame nf = new NotifyFrame("Could not read the JSON file. Please make sure the correct file is chosen.");
+					
+				} catch (FileNotFoundException err) {
 					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				TestFrame tFrame = new TestFrame(phase_vec);
-				dispose_frame();
-				//For getting a file and/or directory
-//				chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-//				//or
-//				chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-//				chooser.getCurrentDirectory()
-//				//or
-//				chooser.getSelectedFile();
+					err.printStackTrace();
+					NotifyFrame nf = new NotifyFrame("Could not open file.");
+				} 
 			}
 		});
 		
@@ -104,7 +93,7 @@ public class WelcomeFrame extends JInternalFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				dispose_frame();
+				jFrame.dispose();
 				TestFrame tFrame = new TestFrame();
 			}
 		});
@@ -141,11 +130,5 @@ public class WelcomeFrame extends JInternalFrame {
 		);
 		jFrame.getContentPane().setLayout(groupLayout);
 
-	}
-	
-	
-	
-	public void dispose_frame() {
-		jFrame.dispose();
 	}
 }

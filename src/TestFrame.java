@@ -15,6 +15,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.JLabel;
 import java.awt.BorderLayout;
 import java.awt.List;
@@ -48,7 +49,6 @@ public class TestFrame extends JFrame {
 	public TestFrame() {
 		phase_info_vec = new Vector<PhaseInfo>();
 		counter = 0;
-		setTitle("Add Test");
 		JFrame frmTestRunner = new JFrame();
 		frmTestRunner.setTitle("Test Runner");
 		frmTestRunner.setVisible(true);
@@ -78,7 +78,7 @@ public class TestFrame extends JFrame {
 		
 		JLabel lbl_runs = new JLabel("Runs:");
 		
-		JSpinner spinner = new JSpinner();
+		JSpinner spinner = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 		
 		JButton add_phase_btn = new JButton("Add Phase");
 		add_phase_btn.addActionListener(new ActionListener() {
@@ -176,7 +176,8 @@ public class TestFrame extends JFrame {
 				String interaction = selected_phase.get_interaction_type();
 				String message = selected_phase.get_message();
 				String url = txtField_url.getText();
-				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction,message, frmTestRunner);
+				int delay = selected_phase.get_wait_time();
+				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction, message, delay, frmTestRunner);
 				phase_info_vec.set(index, selected_phase);
 				phase_list.set(index, selected_phase.get_phase_name());
 				list.setModel(phase_list);
@@ -310,7 +311,7 @@ public class TestFrame extends JFrame {
 		
 		JLabel lbl_runs = new JLabel("Runs:");
 		
-		JSpinner spinner = new JSpinner();
+		JSpinner spinner = new JSpinner(new SpinnerNumberModel(1, 1, 100, 1));
 		
 		ButtonGroup btnGroup = new ButtonGroup();
 		
@@ -402,13 +403,7 @@ public class TestFrame extends JFrame {
 					//TODO: create notificaiton window that it needs to be selected
 				}
 				int test = (int) spinner.getValue();
-				System.out.println("poopcheck");
-				System.out.println(test);
-				System.out.println("poopcheck");
-				System.out.println(txtField_url.getText());
-				System.out.println("poopcheck");
-				System.out.println(driver_type);
-				System.out.println("poopcheck");
+				
 				MainFrame frame = new MainFrame(test, txtField_url.getText(), txtField_driver.getText(), driver_type, phase_info_vec);
 				frmTestRunner.dispose();
 				//logs.set_logs("made it testframe 132");
@@ -426,7 +421,8 @@ public class TestFrame extends JFrame {
 				String interaction = selected_phase.get_interaction_type();
 				String message = selected_phase.get_message();
 				String url = "test";//txtField_url.getText();
-				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction,message, frmTestRunner);
+				int delay = selected_phase.get_wait_time();
+				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction, message, delay, frmTestRunner);
 				phase_info_vec.set(index, selected_phase);
 				phase_list.set(index, selected_phase.get_phase_name());
 				list.setModel(phase_list);

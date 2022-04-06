@@ -12,6 +12,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
 import java.util.Vector;
@@ -29,26 +30,13 @@ public class PhaseInfoDialog extends JDialog {
 	private JTextField textField_takeScreenshot;
 	private JTextField txtField_type;
 	private String file_name;
+	private boolean take_screenshot_selected;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		try {
-//			PhaseInfoDialog dialog = new PhaseInfoDialog();
-//			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-//			dialog.setVisible(true);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
-
-	/**
-	 * Create the dialog.
-	 * 
-	 */
-	public PhaseInfoDialog(int index, Vector<PhaseInfo> phase_info_vec, PhaseInfo phase_info, String url, String phase_name, String element, String screenshot, String interaction, String message, JFrame frame) {
-		
+	
+	
+	//Used for viewing phase
+	public PhaseInfoDialog(int index, Vector<PhaseInfo> phase_info_vec, PhaseInfo phase_info, String url, String phase_name, String element, String screenshot, String interaction, String message, int delay, JFrame frame) {
+		take_screenshot_selected = false;
 		JDialog dialog = new JDialog(frame);
 		dialog.setModal(true);
 		dialog.setTitle("Phase Frame");
@@ -71,7 +59,7 @@ public class PhaseInfoDialog extends JDialog {
 		
 		JLabel lbl_or = new JLabel("Or");
 		
-		JSpinner spinner = new JSpinner();
+		JSpinner spinner = new JSpinner(new SpinnerNumberModel(delay, 0, 100, 1));
 		
 		JLabel lbl_delay = new JLabel("Delay:");
 		
@@ -92,6 +80,24 @@ public class PhaseInfoDialog extends JDialog {
 		btnGroup.add(rdbtn_type);
 		btnGroup.add(rdbtn_wait);
 		
+		switch(interaction) {
+		case "Lclick":
+			rdbtn_lClick.setSelected(true);
+			break;
+		case "Rclick":
+			rdbtn_rClick.setSelected(true);
+			break;
+		case "Wait":
+			rdbtn_wait.setSelected(true);
+			break;
+		case "Type":
+			rdbtn_type.setSelected(true);
+			break;
+		default:
+			break;
+		}
+		
+		
 		JButton btnNewButton = new JButton("Ok");
 		btnNewButton.addActionListener(new ActionListener() {
 			@Override
@@ -106,20 +112,35 @@ public class PhaseInfoDialog extends JDialog {
 				phase_info.set_expected_path(expected);
 				System.out.println(phase_info.get_screenshot());
 				
+				String interaction_type = "";
 				if (rdbtn_lClick.isSelected()) {
 					phase_info.set_interaction_type("Lclick");
+					interaction_type = "Lclick";
 				}
 				else if (rdbtn_rClick.isSelected()) {
 					phase_info.set_interaction_type("Rclick");
+					interaction_type = "Rclick";
+				}
+				else if (rdbtn_wait.isSelected()) {
+					phase_info.set_interaction_type("Wait");
+					interaction_type = "Wait";
 				}
 				else if (rdbtn_type.isSelected()) {
 					phase_info.set_interaction_type("Type");
+					interaction_type = "Type";
 					String message = txtField_type.getText();
 					phase_info.set_message(message);
 				}
 				else {
 					//TODO: Add notification window
 				}
+				
+				if(take_screenshot_selected == true) {
+					Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element);
+					Thread t = new Thread(ss);
+					t.start();
+				}
+				
 				dialog.dispose();
 			}
 		});
@@ -143,6 +164,8 @@ public class PhaseInfoDialog extends JDialog {
 		txtField_addElement.setEditable(false);
 		txtField_addElement.setColumns(10);
 		
+		
+		
 		JButton btn_takeScreenShot = new JButton("Take Screenshot");
 		btn_takeScreenShot.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -155,6 +178,7 @@ public class PhaseInfoDialog extends JDialog {
 //				t.start();
 				file_name = j.getSelectedFile().getAbsolutePath();
 				textField_takeScreenshot.setText(file_name);
+				take_screenshot_selected = true;
 			}
 		});
 		
@@ -291,7 +315,7 @@ public class PhaseInfoDialog extends JDialog {
 	 * @wbp.parser.constructor
 	 */
 	public PhaseInfoDialog(int index, Vector<PhaseInfo> phase_info_vec, PhaseInfo phase_info, String url, JFrame frame) {
-		
+		take_screenshot_selected = false;
 		JDialog dialog = new JDialog(frame);
 		dialog.setModalityType(ModalityType.APPLICATION_MODAL);
 		dialog.setModal(true);
@@ -311,10 +335,19 @@ public class PhaseInfoDialog extends JDialog {
 		txtField_phaseName.setColumns(10);
 		
 		JButton btn_upload = new JButton("Upload");
+		btn_upload.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser j = new JFileChooser();
+				j.showOpenDialog(null);
+				file_name = j.getSelectedFile().getAbsolutePath();
+				textField_takeScreenshot.setText(file_name);
+				
+			}
+		});
 		
 		JLabel lbl_or = new JLabel("Or");
 		
-		JSpinner spinner = new JSpinner();
+		JSpinner spinner = new JSpinner(new SpinnerNumberModel(0, 0, 100, 1));
 		
 		JLabel lbl_delay = new JLabel("Delay:");
 		
@@ -355,11 +388,15 @@ public class PhaseInfoDialog extends JDialog {
 				else if (rdbtn_rClick.isSelected()) {
 					phase_info.set_interaction_type("Rclick");
 				}
+				else if (rdbtn_wait.isSelected()) {
+					phase_info.set_interaction_type("Wait");
+				}
 				else if (rdbtn_type.isSelected()) {
 					phase_info.set_interaction_type("Type");
 					String message = txtField_type.getText();
 					phase_info.set_message(message);
 				}
+				
 				else {
 					//TODO: Add notification window
 				}
@@ -374,15 +411,21 @@ public class PhaseInfoDialog extends JDialog {
 				else if (rdbtn_type.isSelected()) {
 					interaction_type = "Type";
 				} 
+				else if (rdbtn_type.isSelected()) {
+					interaction_type = "Wait";
+				} 
 				else {
 					//TODO: Add notification window
+					NotifyFrame nf = new NotifyFrame("Please select an interaction type.");
 				}
 
+				if(take_screenshot_selected == true) {
+					Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element);
+					Thread t = new Thread(ss);
+					t.start();
+				}
 				
-				Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element);
 				
-				Thread t = new Thread(ss);
-				t.start();
 				//phase_info_vec.add(phase_info);
 				dialog.dispose();
 			}
@@ -411,7 +454,7 @@ public class PhaseInfoDialog extends JDialog {
 				j.showSaveDialog(null);
 				file_name = j.getSelectedFile().getAbsolutePath();
 				textField_takeScreenshot.setText(file_name);
-				
+				take_screenshot_selected = true;
 			}
 		});
 		

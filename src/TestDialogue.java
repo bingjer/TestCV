@@ -319,7 +319,7 @@ public class TestDialogue extends JDialog {
 				String interaction = selected_phase.get_interaction_type();
 				String message = selected_phase.get_message();
 				String url = "test";//txtField_url.getText();
-				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction,message, frmTestRunner);
+				PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction,message, 10, frmTestRunner);
 				phase_info_vec.set(index, selected_phase);
 				phase_list.set(index, selected_phase.get_phase_name());
 				list.setModel(phase_list);

@@ -9,7 +9,9 @@ import com.google.gson.JsonElement;
 //import org.json.simple.JSONObject;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
 //import org.json.simple.parser.*;
+import com.google.gson.stream.MalformedJsonException;
 
 public class TestInfo {
 	private static FileWriter file;
@@ -51,29 +53,31 @@ public class TestInfo {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			NotifyFrame nf = new NotifyFrame("Could not write to file. Please try again.");
 		} finally {
 			try {
 				file.flush();
 				file.close();
 			} catch (IOException e) {
 				e.printStackTrace();
+				NotifyFrame nf = new NotifyFrame("Could not write to file. Please try again.");
 			}
 		}
 	}
 	
-	public void load_json(String file_name, Vector<PhaseInfo> phase_vec) throws FileNotFoundException  {
+	public void load_json(String file_name, Vector<PhaseInfo> phase_vec) throws FileNotFoundException, JsonSyntaxException  {
 		Object obj;
 		FileReader read_file = new FileReader(file_name);
-		System.out.println(read_file);
+		//System.out.println(read_file);
 		obj = new JsonParser().parse(read_file);
-		System.out.println(obj);
+		//System.out.println(obj);
 		JsonObject json_obj = (JsonObject) obj;
 		//System.out.println(json_obj);
 //		json_obj.keySet().forEach(key -> {
 //			Object value = json_obj.get(key);
 //			System.out.println(value);
 //		});
-		System.out.println(json_obj);
+		//System.out.println(json_obj);
 		//System.out.println(inner_value_string);
 		for(String key : json_obj.keySet()) {
 			Object value = json_obj.get(key);
