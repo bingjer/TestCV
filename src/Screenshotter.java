@@ -19,6 +19,7 @@ import org.sikuli.script.FindFailed;
 import org.sikuli.script.Pattern;
 import org.sikuli.script.Screen;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class Screenshotter implements Runnable   {
 	
@@ -28,14 +29,18 @@ public class Screenshotter implements Runnable   {
 	private int index;
 	private String interaction;
 	private String element;
+	private String driver_loc;
+	private String driver_type;
 	
-	public Screenshotter(int index, Vector<PhaseInfo> phase_info_vec, String file_name, String interaction, String element) {
+	public Screenshotter(int index, Vector<PhaseInfo> phase_info_vec, String file_name, String interaction, String element, String driver_loc, String driver_type) {
 		this.file_name = file_name;
 		//this.url = url;
 		this.phase_info_vec = phase_info_vec;
 		this.index = index;
 		this.interaction = interaction;
 		this.element = element;
+		this.driver_loc = driver_loc;
+		this.driver_type = driver_type;
 	}
 	
 
@@ -49,8 +54,17 @@ public class Screenshotter implements Runnable   {
 		 System.out.println(index);
 		
 		WebDriver driver;
-		System.setProperty("webdriver.chrome.driver", "D:\\Downloads\\chromedriver_98.exe");
-        driver = new ChromeDriver();
+		if(driver_type.equals("chrome")) {
+			System.setProperty("webdriver.chrome.driver", driver_loc);
+	        driver = new ChromeDriver();
+		} 
+		else if (driver_type.equals("firefox")){
+			System.setProperty("webdriver.gecko.driver", driver_loc);
+	        driver = new FirefoxDriver();
+		}
+		else {
+			driver = null;
+		}
         System.out.println(phase_info_vec.size());
         System.out.println(index);
 		if(index == 0) {
@@ -86,7 +100,8 @@ public class Screenshotter implements Runnable   {
 	        
 	        
 	        //Selenium way to take a screenshot
-	        File screenShot = new File(file_name + ".png").getAbsoluteFile();
+	        String formatted_file = format_path(file_name);
+	        File screenShot = new File(formatted_file).getAbsoluteFile();
 	        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 	        try {
 				FileUtils.copyFile(scrFile, screenShot);
@@ -230,7 +245,8 @@ public class Screenshotter implements Runnable   {
 	        }
 	        
 	        //Selenium way to take a screenshot
-	        File screenShot = new File(file_name + ".png").getAbsoluteFile();
+	        String formatted_file = format_path(file_name);
+	        File screenShot = new File(formatted_file).getAbsoluteFile();
 	        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 	        try {
 				FileUtils.copyFile(scrFile, screenShot);
@@ -244,6 +260,16 @@ public class Screenshotter implements Runnable   {
 
         // Close the browser
         driver.quit();
+	}
+	
+	public String format_path(String path) {
+		if(path.endsWith(".png")) {
+			return path;
+		} 
+		else {
+			String new_path = path + ".png";
+			return new_path;
+		}
 	}
 
 }

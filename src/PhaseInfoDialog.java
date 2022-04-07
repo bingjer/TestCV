@@ -35,7 +35,7 @@ public class PhaseInfoDialog extends JDialog {
 	
 	
 	//Used for viewing phase
-	public PhaseInfoDialog(int index, Vector<PhaseInfo> phase_info_vec, PhaseInfo phase_info, String url, String phase_name, String element, String screenshot, String interaction, String message, int delay, JFrame frame) {
+	public PhaseInfoDialog(int index, Vector<PhaseInfo> phase_info_vec, PhaseInfo phase_info, String url, String phase_name, String element, String screenshot, String interaction, String message, int delay, JFrame frame, String driver_loc, String driver_type) {
 		take_screenshot_selected = false;
 		JDialog dialog = new JDialog(frame);
 		dialog.setModal(true);
@@ -104,7 +104,7 @@ public class PhaseInfoDialog extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				String text = txtField_phaseName.getText();
 				String element = txtField_addElement.getText();
-				String expected = textField_takeScreenshot.getText() + ".png";
+				String expected = format_path(textField_takeScreenshot.getText());
 				int wait_time = (int) spinner.getValue();
 				phase_info.set_wait_time(wait_time);
 				phase_info.set_phase_name(text);
@@ -136,7 +136,7 @@ public class PhaseInfoDialog extends JDialog {
 				}
 				
 				if(take_screenshot_selected == true) {
-					Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element);
+					Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element, driver_loc, driver_type);
 					Thread t = new Thread(ss);
 					t.start();
 				}
@@ -314,7 +314,7 @@ public class PhaseInfoDialog extends JDialog {
 	/**
 	 * @wbp.parser.constructor
 	 */
-	public PhaseInfoDialog(int index, Vector<PhaseInfo> phase_info_vec, PhaseInfo phase_info, String url, JFrame frame) {
+	public PhaseInfoDialog(int index, Vector<PhaseInfo> phase_info_vec, PhaseInfo phase_info, String url, JFrame frame, String driver_loc, String driver_type) {
 		take_screenshot_selected = false;
 		JDialog dialog = new JDialog(frame);
 		dialog.setModalityType(ModalityType.APPLICATION_MODAL);
@@ -420,7 +420,7 @@ public class PhaseInfoDialog extends JDialog {
 				}
 
 				if(take_screenshot_selected == true) {
-					Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element);
+					Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element, driver_loc, driver_type);
 					Thread t = new Thread(ss);
 					t.start();
 				}
@@ -590,5 +590,15 @@ public class PhaseInfoDialog extends JDialog {
 	
 	public String get_text() {
 		return txtField_phaseName.getText();
+	}
+	
+	public String format_path(String path) {
+		if(path.endsWith(".png")) {
+			return path;
+		} 
+		else {
+			String new_path = path + ".png";
+			return new_path;
+		}
 	}
 }

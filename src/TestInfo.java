@@ -38,7 +38,8 @@ public class TestInfo {
 			inner_obj.addProperty("Interaction", phase.get_interaction_type());
 			inner_obj.addProperty("Message", phase.get_message());
 			inner_obj.addProperty("Time", phase.get_wait_time());
-			
+			System.out.println("here1");
+			System.out.println(phase.get_screenshot());
 			//JSONObject inner_json_obj = new JSONObject();
 			String string_counter = String.valueOf(counter);
 			json_obj.add(string_counter, inner_obj);
@@ -48,6 +49,9 @@ public class TestInfo {
 		}
 		//JsonObject json_obj = new JsonObject();
 		try {
+			System.out.println("here1");
+			System.out.println(json_obj.toString());
+			System.out.println(file_name);
 			file = new FileWriter(file_name);
 			file.write(json_obj.toString());
 		} catch (IOException e) {
@@ -96,10 +100,12 @@ public class TestInfo {
 					phase.set_phase_name(inner_value_string);
 					break;
 				case "Element":
-					phase.set_element_path(inner_value_string);
+					String formated_element = inner_value_string.replace("\\\\", "\\");
+					phase.set_element_path(formated_element);
 					break;
 				case "Screenshot":
-					phase.set_expected_path(inner_value_string);
+					String formated_screenshot = inner_value_string.replace("\\\\", "\\");
+					phase.set_expected_path(formated_screenshot);
 					break;
 				case "Interaction":
 					phase.set_interaction_type(inner_value_string);

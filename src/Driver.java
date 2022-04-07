@@ -58,6 +58,15 @@ public class Driver implements Runnable   {
 	@Override
 	public void run() {
 		while(test_run_counter > 0) {
+			// Clear Images folder before each test
+			 try {
+					FileUtils.cleanDirectory(new File("Images"));
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					NotifyFrame nf = new NotifyFrame("clearing directory error");
+				}	
+			
 		WebDriver driver;
 		//System.setProperty("webdriver.chrome.driver", "D:\\Downloads\\chromedriver_98.exe");
 		if(driver_type.equals("chrome")) {
@@ -96,6 +105,8 @@ public class Driver implements Runnable   {
 			list.setModel(logs);
 			counter++;
 			run_counter++;
+			
+			
 	        
 	        for(int i = 0; i < phase_info_vec.size(); i++) {
 //	        	if(phase_info_vec.get(i).get_wait_time() != 0) {
@@ -117,6 +128,9 @@ public class Driver implements Runnable   {
 	        	System.out.println(phase_info_vec.get(i).get_screenshot());
 	        	if(i == 0) {
 	        		//driver.get("http://google.com"); // change to url in live
+	        		System.out.println("Here");
+	        		System.out.println(url);
+
 	        		driver.get(url);
 	    	        driver.manage().window().maximize();
 	    	        //TODO: change to url or phase
@@ -199,7 +213,8 @@ public class Driver implements Runnable   {
 		        }
 		        
 		        //Selenium way to take a screenshot
-		        String file_name = ("C:\\Users\\adamn\\OneDrive\\Documents\\testcvimg_" + (i + 1) + ".png");
+		       
+		        String file_name = ("Images\\testcvimg_" + (i + 1) + ".png");
 		        File screenShot = new File(file_name).getAbsoluteFile();
 		        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		        try {
