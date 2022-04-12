@@ -101,6 +101,10 @@ public class Driver implements Runnable   {
 	        
 	        int run_counter = 0;
 	        
+	        logs.add(counter, "===============================================================");
+	        list.setModel(logs);
+
+	        counter++;
 	        logs.add(counter, "Starting run number: " + run_counter);
 			list.setModel(logs);
 			counter++;
@@ -139,6 +143,10 @@ public class Driver implements Runnable   {
 	    			counter++;
 	        	}
 	        	
+	        	logs.add(counter, "===============================================================");
+		        list.setModel(logs);
+
+		        counter++;
 	        	logs.add(counter, "Starting phase: " + phase_info_vec.get(i).get_phase_name());
 				list.setModel(logs);
 				counter++;
@@ -203,7 +211,7 @@ public class Driver implements Runnable   {
 						e.printStackTrace();
 					}
 			        try {
-						s.type(pattern, "test this");
+						s.type(pattern, phase_info_vec.get(i).get_message());
 					} catch (FindFailed e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -251,10 +259,13 @@ public class Driver implements Runnable   {
 				logs.add(counter, "The images were " + correlation_pct + "% similar.");
 				list.setModel(logs);
 				counter++;
-//				
+				
 		        
 	        }
 	        
+	        logs.add(counter, "========================END TEST================================");
+			list.setModel(logs);
+	        counter++;
 	        driver.quit();
 	        test_run_counter--;
 	        

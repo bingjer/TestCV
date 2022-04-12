@@ -136,7 +136,7 @@ public class PhaseInfoDialog extends JDialog {
 				}
 				
 				if(take_screenshot_selected == true) {
-					Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element, driver_loc, driver_type);
+					Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element, driver_loc, driver_type, url, phase_info);
 					Thread t = new Thread(ss);
 					t.start();
 				}
@@ -420,7 +420,7 @@ public class PhaseInfoDialog extends JDialog {
 				}
 
 				if(take_screenshot_selected == true) {
-					Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element, driver_loc, driver_type);
+					Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element, driver_loc, driver_type, url, phase_info);
 					Thread t = new Thread(ss);
 					t.start();
 				}

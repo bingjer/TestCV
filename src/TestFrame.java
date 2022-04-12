@@ -86,15 +86,15 @@ public class TestFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				PhaseInfo phase_info = new PhaseInfo();
-				String url = "test"; //txtField_url.getText();
+				String url = txtField_url.getText();
 				if(validate_url(url)) {
 				if(!rdbtn_chrome.isSelected() && !rdbtn_firefox.isSelected()) {
 					NotifyFrame nf = new NotifyFrame("Please select your driver type.");
 				}
-				else if(txtField_url.getText() == "") {
+				else if(txtField_url.getText().isEmpty()) {
 					NotifyFrame nf = new NotifyFrame("Please fill out the URL.");
 				}
-				else if(txtField_driver.getText() == "") {
+				else if(txtField_driver.getText().isEmpty()) {
 					NotifyFrame nf = new NotifyFrame("Please select your driver.");
 				}
 				else {
@@ -194,6 +194,11 @@ public class TestFrame extends JFrame {
 		JButton view_phase_btn = new JButton("View Phase");
 		view_phase_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+//				System.out.println("here2");
+//				System.out.println(txtField_driver.getText());
+//				if(txtField_driver.getText().isEmpty()) {
+//					System.out.println("here2poop");
+//				}
 				int index = list.getSelectedIndex();
 				PhaseInfo selected_phase = phase_info_vec.get(index);
 				String phase_name = selected_phase.get_phase_name();
@@ -206,10 +211,10 @@ public class TestFrame extends JFrame {
 				if(!rdbtn_chrome.isSelected() && !rdbtn_firefox.isSelected()) {
 					NotifyFrame nf = new NotifyFrame("Please select your driver type.");
 				}
-				else if(txtField_url.getText() == "") {
+				else if(txtField_url.getText().isEmpty()) {
 					NotifyFrame nf = new NotifyFrame("Please fill out the URL.");
 				}
-				else if(txtField_driver.getText() == "") {
+				else if(txtField_driver.getText().isEmpty()) {
 					NotifyFrame nf = new NotifyFrame("Please select your driver.");
 				}
 				else {
@@ -392,10 +397,10 @@ public class TestFrame extends JFrame {
 				if(!rdbtn_chrome.isSelected() && !rdbtn_firefox.isSelected()) {
 					NotifyFrame nf = new NotifyFrame("Please select your driver type.");
 				}
-				else if(txtField_url.getText() == "") {
+				else if(txtField_url.getText().isEmpty()) {
 					NotifyFrame nf = new NotifyFrame("Please fill out the URL.");
 				}
-				else if(txtField_driver.getText() == "") {
+				else if(txtField_driver.getText().isEmpty()) {
 					NotifyFrame nf = new NotifyFrame("Please select your driver.");
 				}
 				else {
@@ -489,6 +494,11 @@ public class TestFrame extends JFrame {
 		JButton view_phase_btn = new JButton("View Phase");
 		view_phase_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("here1");
+				System.out.println(txtField_driver.getText());
+				if(txtField_driver.getText().isEmpty()) {
+					System.out.println("here2poop");
+				}
 				int index = list.getSelectedIndex();
 				PhaseInfo selected_phase = phase_info_vec.get(index);
 				String phase_name = selected_phase.get_phase_name();
@@ -503,10 +513,10 @@ public class TestFrame extends JFrame {
 				if(!rdbtn_chrome.isSelected() && !rdbtn_firefox.isSelected()) {
 					NotifyFrame nf = new NotifyFrame("Please select your driver type.");
 				}
-				else if(txtField_url.getText() == "") {
+				else if(txtField_url.getText().isEmpty()) {
 					NotifyFrame nf = new NotifyFrame("Please fill out the URL.");
 				}
-				else if(txtField_driver.getText() == "") {
+				else if(txtField_driver.getText().isEmpty()) {
 					NotifyFrame nf = new NotifyFrame("Please select your driver.");
 				}
 				else {

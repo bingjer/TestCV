@@ -31,16 +31,18 @@ public class Screenshotter implements Runnable   {
 	private String element;
 	private String driver_loc;
 	private String driver_type;
+	private PhaseInfo phase_info;
 	
-	public Screenshotter(int index, Vector<PhaseInfo> phase_info_vec, String file_name, String interaction, String element, String driver_loc, String driver_type) {
+	public Screenshotter(int index, Vector<PhaseInfo> phase_info_vec, String file_name, String interaction, String element, String driver_loc, String driver_type, String url, PhaseInfo phase_info) {
 		this.file_name = file_name;
-		//this.url = url;
+		this.url = url;
 		this.phase_info_vec = phase_info_vec;
 		this.index = index;
 		this.interaction = interaction;
 		this.element = element;
 		this.driver_loc = driver_loc;
 		this.driver_type = driver_type;
+		this.phase_info = phase_info;
 	}
 	
 
@@ -71,7 +73,7 @@ public class Screenshotter implements Runnable   {
 			// Open Chrome browser    
 	        System.out.println("am empty");
 	        //driver.get(url);
-			driver.get("http://google.com");
+			driver.get(url);
 	        driver.manage().window().maximize();
 
 	        // Click on Browse button and handle windows pop up using Sikuli
@@ -92,7 +94,7 @@ public class Screenshotter implements Runnable   {
 				e.printStackTrace();
 			}
 	        try {
-				s.type(textbox, "test this");
+				s.type(textbox, phase_info_vec.get(0).get_message());
 			} catch (FindFailed e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -130,7 +132,7 @@ public class Screenshotter implements Runnable   {
 	        for(int i = 0; i < index; i++) {
 	        	
 	        	if(i == 0) {
-	        		driver.get("http://google.com"); // change to url in live
+	        		driver.get(url); // change to url in live
 	    	        driver.manage().window().maximize();
 	        	}
 	        	
@@ -180,7 +182,7 @@ public class Screenshotter implements Runnable   {
 						e.printStackTrace();
 					}
 			        try {
-						s.type(pattern, "test this");
+						s.type(pattern, phase_info_vec.get(i).get_message());
 					} catch (FindFailed e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -235,7 +237,7 @@ public class Screenshotter implements Runnable   {
 					e.printStackTrace();
 				}
 		        try {
-					s.type(pattern, "test this");
+					s.type(pattern, phase_info.get_message());
 				} catch (FindFailed e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
