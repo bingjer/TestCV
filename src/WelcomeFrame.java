@@ -42,8 +42,8 @@ public class WelcomeFrame extends JInternalFrame {
 			}
 		});
 		
-		System.out.println(Core.NATIVE_LIBRARY_NAME);
-		System.loadLibrary("opencv_java455");
+		//System.out.println(Core.NATIVE_LIBRARY_NAME);
+		//System.loadLibrary("opencv_java455");
 	}
 	
 	

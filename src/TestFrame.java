@@ -382,6 +382,8 @@ public class TestFrame extends JFrame {
 		btnGroup.add(rdbtn_chrome);
 		btnGroup.add(rdbtn_firefox);
 		
+		//counter = 0;
+		
 		JButton add_phase_btn = new JButton("Add Phase");
 		add_phase_btn.addActionListener(new ActionListener() {
 			
@@ -392,6 +394,13 @@ public class TestFrame extends JFrame {
 				String url = txtField_url.getText();
 				String driver_loc = txtField_driver.getText();
 				String driver_type = "";
+				
+				if(list.isSelectionEmpty()) {
+					counter = phase_info_vec.size();
+				}
+				else {
+					counter = list.getSelectedIndex() + 1;
+				}
 				
 				if(validate_url(url)) {
 				if(!rdbtn_chrome.isSelected() && !rdbtn_firefox.isSelected()) {

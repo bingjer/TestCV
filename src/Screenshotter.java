@@ -85,20 +85,66 @@ public class Screenshotter implements Runnable   {
 	        System.out.println("Line 69.");
 	        Screen s = new Screen();
 	        System.out.println("Line 71.");
-	        Pattern textbox = new Pattern(element);
+	        Pattern pattern = new Pattern(element);
 	        System.out.println("Line 73.");
-	        try {
-				s.wait(textbox, 5000);
-			} catch (FindFailed e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	        try {
-				s.type(textbox, phase_info_vec.get(0).get_message());
-			} catch (FindFailed e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//	        try {
+//				s.wait(textbox, 5000);
+//			} catch (FindFailed e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//	        try {
+//				s.type(textbox, phase_info_vec.get(0).get_message());
+//			} catch (FindFailed e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+	        String interaction_type = phase_info_vec.get(0).get_interaction_type();
+	        switch(interaction_type) {
+	        case "Lclick":
+	        	try {
+					s.wait(pattern, 5000);
+				} catch (FindFailed e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		        try {
+		        	s.click(pattern, 5000);
+				} catch (FindFailed e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        	break;
+	        case "Rclick":
+	        	try {
+					s.wait(pattern, 5000);
+				} catch (FindFailed e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		        try {
+		        	s.rightClick(pattern, 5000);
+				} catch (FindFailed e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        	break;
+	        case "Type":
+	        	try {
+					s.wait(pattern, 5000);
+				} catch (FindFailed e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		        try {
+					s.type(pattern, phase_info_vec.get(0).get_message());
+				} catch (FindFailed e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        default:
+	        	break;
+	        }
 	        
 	        
 	        //Selenium way to take a screenshot
@@ -112,7 +158,7 @@ public class Screenshotter implements Runnable   {
 				e.printStackTrace();
 			}
 	        System.out.println("Took Screenshot"  + " saved at " + screenShot);
-	        driver.quit();
+	      //  driver.quit();
 		} 
 		else {
 			//driver.get(url);
@@ -130,7 +176,21 @@ public class Screenshotter implements Runnable   {
 	        System.out.println("Line 113.");
 	        System.out.println(index);
 	        for(int i = 0; i < index; i++) {
-	        	
+	        	if(phase_info_vec.get(i).get_wait_time() != 0) {
+	        		synchronized(this) {
+	    	        	try {
+		        			System.out.println("waiting");
+
+	    					this.wait(phase_info_vec.get(i).get_wait_time() * 1000);
+		        			System.out.println("has it been 5 sec?");
+
+	    				} catch (InterruptedException e) {
+	    					// TODO Auto-generated catch block
+	    					e.printStackTrace();
+	    				}
+	    	        }
+
+	        	}
 	        	if(i == 0) {
 	        		driver.get(url); // change to url in live
 	    	        driver.manage().window().maximize();
@@ -193,13 +253,29 @@ public class Screenshotter implements Runnable   {
 		        
 	        }
 	        
+	        if(phase_info.get_wait_time() != 0) {
+        		synchronized(this) {
+    	        	try {
+	        			System.out.println("waiting");
+
+    					this.wait(phase_info.get_wait_time() * 1000);
+	        			System.out.println("has it been 5 sec?");
+
+    				} catch (InterruptedException e) {
+    					// TODO Auto-generated catch block
+    					e.printStackTrace();
+    				}
+    	        }
+
+        	}
+	        
 	        Pattern pattern = new Pattern(element);
 	        System.out.println(element);
 	        System.out.println("Line 180.");
 	        System.out.println(interaction);
 	        //String interaction_type = phase_info_vec.get(i).get_interaction_type();
 	        switch(interaction) {
-	        case "Lclick":
+	        case "Lclick 232":
 	        	try {
 	        		System.out.println("Finding element...");
 					s.wait(pattern, 5000);

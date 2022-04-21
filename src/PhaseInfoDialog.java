@@ -411,7 +411,7 @@ public class PhaseInfoDialog extends JDialog {
 				else if (rdbtn_type.isSelected()) {
 					interaction_type = "Type";
 				} 
-				else if (rdbtn_type.isSelected()) {
+				else if (rdbtn_wait.isSelected()) {
 					interaction_type = "Wait";
 				} 
 				else {

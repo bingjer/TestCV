@@ -57,15 +57,16 @@ public class Driver implements Runnable   {
 
 	@Override
 	public void run() {
+		int run_counter = 1;
 		while(test_run_counter > 0) {
-			// Clear Images folder before each test
-			 try {
-					FileUtils.cleanDirectory(new File("Images"));
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					NotifyFrame nf = new NotifyFrame("clearing directory error");
-				}	
+//			// Clear Images folder before each test
+//			 try {
+//					FileUtils.cleanDirectory(new File("Images"));
+//				} catch (IOException e1) {
+//					// TODO Auto-generated catch block
+//					e1.printStackTrace();
+//					NotifyFrame nf = new NotifyFrame("clearing directory error");
+//				}	
 			
 		WebDriver driver;
 		//System.setProperty("webdriver.chrome.driver", "D:\\Downloads\\chromedriver_98.exe");
@@ -99,7 +100,6 @@ public class Driver implements Runnable   {
 	        
 	        
 	        
-	        int run_counter = 0;
 	        
 	        logs.add(counter, "===============================================================");
 	        list.setModel(logs);
@@ -109,7 +109,6 @@ public class Driver implements Runnable   {
 			list.setModel(logs);
 			counter++;
 			run_counter++;
-			
 			
 	        
 	        for(int i = 0; i < phase_info_vec.size(); i++) {
@@ -222,7 +221,7 @@ public class Driver implements Runnable   {
 		        
 		        //Selenium way to take a screenshot
 		       
-		        String file_name = ("Images\\testcvimg_" + (i + 1) + ".png");
+		        String file_name = ("TestCV_Images\\testcvimg_" + (i + 1) + ".png");
 		        File screenShot = new File(file_name).getAbsoluteFile();
 		        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		        try {
@@ -263,13 +262,14 @@ public class Driver implements Runnable   {
 		        
 	        }
 	        
-	        logs.add(counter, "========================END TEST================================");
-			list.setModel(logs);
-	        counter++;
+	        
+	        
 	        driver.quit();
 	        test_run_counter--;
 	        
 		}
+		logs.add(counter, "========================END TEST================================");
+		list.setModel(logs);
 		}
 	
 

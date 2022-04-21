@@ -11,6 +11,8 @@ import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
 
 public class NotifyFrame extends JFrame {
 
@@ -25,7 +27,7 @@ public class NotifyFrame extends JFrame {
 		frm_notify.setAlwaysOnTop(true);
 		frm_notify.setVisible(true);
 		frm_notify.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		frm_notify.setBounds(100, 100, 289, 154);
+		frm_notify.setBounds(100, 100, 371, 205);
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -40,27 +42,33 @@ public class NotifyFrame extends JFrame {
 		
 		JLabel lbl_warning = new JLabel("Warning!");
 		
-		JLabel lbl_details = new JLabel(details);
+		JTextPane textPane = new JTextPane();
+		textPane.setEditable(false);
+		textPane.setText(details);
+		
 	
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(100)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(btn_ok)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-							.addComponent(lbl_details)
-							.addComponent(lbl_warning)))
-					.addContainerGap(117, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(138)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lbl_warning)
+								.addComponent(btn_ok)))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(53)
+							.addComponent(textPane, GroupLayout.PREFERRED_SIZE, 223, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap(69, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_contentPane.createSequentialGroup()
 					.addComponent(lbl_warning)
 					.addGap(18)
-					.addComponent(lbl_details)
-					.addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
+					.addComponent(textPane, GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(btn_ok)
 					.addContainerGap())
 		);
