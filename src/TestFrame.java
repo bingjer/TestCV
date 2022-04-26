@@ -37,15 +37,12 @@ public class TestFrame extends JFrame {
 	private String driver_loc;
 	private JFrame frame = new JFrame(); 
 	private Vector<PhaseInfo> phase_info_vec;
-	//private JTextField txtField_url;
 	private JTextField txtField_url;
 	private JTextField txtField_driver;
 
 	
-	/**
-	 * Create the frame.
-	 */
-	public TestFrame() {
+	// Test Frame for new class
+	public TestFrame(String workfolder) {
 		phase_info_vec = new Vector<PhaseInfo>();
 		counter = 0;
 		JFrame frmTestRunner = new JFrame();
@@ -57,7 +54,6 @@ public class TestFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frmTestRunner.setContentPane(contentPane);
 		
-		//Vector<String> phase_list = new Vector<String>();
 		DefaultListModel phase_list = new DefaultListModel();
 		
 		JList list = new JList(phase_list);
@@ -88,57 +84,49 @@ public class TestFrame extends JFrame {
 				PhaseInfo phase_info = new PhaseInfo();
 				String url = txtField_url.getText();
 				if(validate_url(url)) {
-				if(!rdbtn_chrome.isSelected() && !rdbtn_firefox.isSelected()) {
-					NotifyFrame nf = new NotifyFrame("Please select your driver type.");
-				}
-				else if(txtField_url.getText().isEmpty()) {
-					NotifyFrame nf = new NotifyFrame("Please fill out the URL.");
-				}
-				else if(txtField_driver.getText().isEmpty()) {
-					NotifyFrame nf = new NotifyFrame("Please select your driver.");
-				}
-				else {
-					String driver_loc = txtField_driver.getText();
-					String driver_type = "";
-					if(rdbtn_chrome.isSelected()) {
-						driver_type = "chrome";
+					if(!rdbtn_chrome.isSelected() && !rdbtn_firefox.isSelected()) {
+						NotifyFrame nf = new NotifyFrame("Please select your driver type.");
 					}
-					else if(rdbtn_firefox.isSelected()) {
-						driver_type = "firefox";
+					else if(txtField_url.getText().isEmpty()) {
+						NotifyFrame nf = new NotifyFrame("Please fill out the URL.");
+					}
+					else if(txtField_driver.getText().isEmpty()) {
+						NotifyFrame nf = new NotifyFrame("Please select your driver.");
 					}
 					else {
-						//TODO: create notificaiton window that it needs to be selected
-					}
-				
-					PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, phase_info, url, frmTestRunner, driver_loc, driver_type);
-					System.out.println(phase_info.get_phase_name());
-//					boolean wasSuccessful = true;
-//					PhaseFrame phaseFrame = new PhaseFrame(phase_info, wasSuccessful);
-//					System.out.println(phase_info.get_phase_name());
-//						System.out.println(phase_info.get_phase_name());
-					int index = list.getSelectedIndex();
+						String driver_loc = txtField_driver.getText();
+						String driver_type = "";
+						if(rdbtn_chrome.isSelected()) {
+							driver_type = "chrome";
+						}
+						else {
+							driver_type = "firefox";
+						}
+						
+						PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, phase_info, url, frmTestRunner, driver_loc, driver_type);
+						System.out.println(phase_info.get_phase_name());
+						System.out.println("poopykaka");
+						System.out.println(phase_dialog.get_cancel_check() + " pippy");
+						if(!phase_dialog.get_cancel_check()) {
+							int index = list.getSelectedIndex();
 					
-					if (index != -1) {
-						counter = index;
-						phase_info_vec.add(index + 1, phase_info);
-						++counter;
-						//phase_list.addElement(phase_info.get_phase_name());
-						phase_list.add(index + 1, phase_info.get_phase_name());
-						list.setModel(phase_list);
-					} else {
-						counter = phase_info_vec.size();
-						++counter;
-						System.out.println("shouldn't be here");
-						phase_info_vec.add(phase_info);
-						phase_list.addElement(phase_info.get_phase_name());
-						list.setModel(phase_list);
+							if (index != -1) {
+								counter = index;
+								phase_info_vec.add(index + 1, phase_info);
+								++counter;
+								phase_list.add(index + 1, phase_info.get_phase_name());
+								list.setModel(phase_list);
+							} 
+							else {
+								counter = phase_info_vec.size();
+								++counter;
+								phase_info_vec.add(phase_info);
+								phase_list.addElement(phase_info.get_phase_name());
+								list.setModel(phase_list);
+							}
+						}
 					}
 				}
-				}
-				
-				
-//		
-	
 			}
 		});
 
@@ -176,29 +164,48 @@ public class TestFrame extends JFrame {
 		run_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String driver_type = "";
-				if(rdbtn_chrome.isSelected()) {
-					driver_type = "chrome";
+//				if(rdbtn_chrome.isSelected()) {
+//					driver_type = "chrome";
+//				}
+//				else if(rdbtn_firefox.isSelected()) {
+//					driver_type = "firefox";
+//				}
+//				else {
+//					NotifyFrame nf = new NotifyFrame("Please select a driver type.");
+//				}
+				
+				if(validate_url(txtField_url.getText())) {
+					if(!rdbtn_chrome.isSelected() && !rdbtn_firefox.isSelected()) {
+						NotifyFrame nf = new NotifyFrame("Please select your driver type.");
+					}
+					else if(txtField_url.getText().isEmpty()) {
+						NotifyFrame nf = new NotifyFrame("Please fill out the URL.");
+					}
+					else if(txtField_driver.getText().isEmpty()) {
+						NotifyFrame nf = new NotifyFrame("Please select your driver.");
+					}
+					else if(phase_list.isEmpty()) {
+						NotifyFrame nf = new NotifyFrame("Your list is empty. Please add a phase or phases.");
+					}
+					else {
+						if(rdbtn_chrome.isSelected()) {
+							driver_type = "chrome";
+						}
+						else {
+							driver_type = "firefox";
+						}
+						MainFrame frame = new MainFrame((int) spinner.getValue(), txtField_url.getText(), txtField_driver.getText(), driver_type, phase_info_vec, workfolder);
+						frmTestRunner.dispose();
+						
+						
+					}
 				}
-				else if(rdbtn_firefox.isSelected()) {
-					driver_type = "firefox";
-				}
-				else {
-					//TODO: create notificaiton window that it needs to be selected
-				}
-				MainFrame frame = new MainFrame((int) spinner.getValue(), txtField_url.getText(), txtField_driver.getText(), driver_type, phase_info_vec);
-				frmTestRunner.dispose();
-				//logs.set_logs("made it testframe 132");
 			}
 		});
 		
 		JButton view_phase_btn = new JButton("View Phase");
 		view_phase_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-//				System.out.println("here2");
-//				System.out.println(txtField_driver.getText());
-//				if(txtField_driver.getText().isEmpty()) {
-//					System.out.println("here2poop");
-//				}
 				int index = list.getSelectedIndex();
 				PhaseInfo selected_phase = phase_info_vec.get(index);
 				String phase_name = selected_phase.get_phase_name();
@@ -223,13 +230,11 @@ public class TestFrame extends JFrame {
 					if(rdbtn_chrome.isSelected()) {
 						driver_type = "chrome";
 					}
-					else if(rdbtn_firefox.isSelected()) {
+					else {
 						driver_type = "firefox";
 					}
-					else {
-						//TODO: create notificaiton window that it needs to be selected
-					}
-					
+					counter = list.getSelectedIndex();
+
 					int delay = selected_phase.get_wait_time();
 					PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction, message, delay, frmTestRunner, driver_loc, driver_type);
 					phase_info_vec.set(index, selected_phase);
@@ -337,7 +342,9 @@ public class TestFrame extends JFrame {
 					contentPane.setLayout(gl_contentPane);
 	}
 	
-	public TestFrame(Vector<PhaseInfo> phase_info_vec) {
+	
+	// Test frame for existing test
+	public TestFrame(Vector<PhaseInfo> phase_info_vec, String workfolder) {
 		setTitle("Add Test");
 		JFrame frmTestRunner = new JFrame();
 		frmTestRunner.setTitle("Test Runner");
@@ -348,7 +355,7 @@ public class TestFrame extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		frmTestRunner.setContentPane(contentPane);
 		
-		//Vector<String> phase_list = new Vector<String>();
+	
 		DefaultListModel phase_list = new DefaultListModel();
 		for(PhaseInfo phase : phase_info_vec) {
 			phase_list.addElement(phase.get_phase_name());
@@ -382,7 +389,6 @@ public class TestFrame extends JFrame {
 		btnGroup.add(rdbtn_chrome);
 		btnGroup.add(rdbtn_firefox);
 		
-		//counter = 0;
 		
 		JButton add_phase_btn = new JButton("Add Phase");
 		add_phase_btn.addActionListener(new ActionListener() {
@@ -416,29 +422,23 @@ public class TestFrame extends JFrame {
 					if(rdbtn_chrome.isSelected()) {
 						driver_type = "chrome";
 					}
-					else if(rdbtn_firefox.isSelected()) {
+					else  {
 						driver_type = "firefox";
 					}
-					else {
-						//TODO: create notificaiton window that it needs to be selected
-					}
 					PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, phase_info, url, frmTestRunner, driver_loc, driver_type);
-					++counter;
-					System.out.println(phase_info.get_phase_name());
-//					boolean wasSuccessful = true;
-//					PhaseFrame phaseFrame = new PhaseFrame(phase_info, wasSuccessful);
-//					System.out.println(phase_info.get_phase_name());
-//						System.out.println(phase_info.get_phase_name());
-					int index = list.getSelectedIndex();
-					if (index != -1) {
-						phase_info_vec.add(index + 1, phase_info);
-						//phase_list.addElement(phase_info.get_phase_name());
-						phase_list.add(index + 1, phase_info.get_phase_name());
-						list.setModel(phase_list);
-					} else {
-						phase_info_vec.add(phase_info);
-						phase_list.addElement(phase_info.get_phase_name());
-						list.setModel(phase_list);
+					if(!phase_dialog.get_cancel_check()) {
+						++counter;
+						System.out.println(phase_info.get_phase_name());
+						int index = list.getSelectedIndex();
+						if (index != -1) {
+							phase_info_vec.add(index + 1, phase_info);
+							phase_list.add(index + 1, phase_info.get_phase_name());
+							list.setModel(phase_list);
+						} else {
+							phase_info_vec.add(phase_info);
+							phase_list.addElement(phase_info.get_phase_name());
+							list.setModel(phase_list);
+						}
 					}
 				}
 				}
@@ -484,19 +484,44 @@ public class TestFrame extends JFrame {
 		run_btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String driver_type = "";
-				if(rdbtn_chrome.isSelected()) {
-					driver_type = "chrome";
-				}
-				else if(rdbtn_firefox.isSelected()) {
-					driver_type = "firefox";
-				}
-				else {
-					//TODO: create notificaiton window that it needs to be selected
+//				if(rdbtn_chrome.isSelected()) {
+//					driver_type = "chrome";
+//				}
+//				else if(rdbtn_firefox.isSelected()) {
+//					driver_type = "firefox";
+//				}
+//				else {
+//					NotifyFrame nf = new NotifyFrame("Please select a driver type.");
+//				}
+				
+				if(validate_url(txtField_url.getText())) {
+					if(!rdbtn_chrome.isSelected() && !rdbtn_firefox.isSelected()) {
+						NotifyFrame nf = new NotifyFrame("Please select your driver type.");
+					}
+					else if(txtField_url.getText().isEmpty()) {
+						NotifyFrame nf = new NotifyFrame("Please fill out the URL.");
+					}
+					else if(txtField_driver.getText().isEmpty()) {
+						NotifyFrame nf = new NotifyFrame("Please select your driver.");
+					}
+					else if(phase_list.isEmpty()) {
+						NotifyFrame nf = new NotifyFrame("Your list is empty. Please add a phase or phases.");
+					}
+					else {
+						if(rdbtn_chrome.isSelected()) {
+							driver_type = "chrome";
+						}
+						else {
+							driver_type = "firefox";
+						}
+						MainFrame frame = new MainFrame((int) spinner.getValue(), txtField_url.getText(), txtField_driver.getText(), driver_type, phase_info_vec, workfolder);
+						frmTestRunner.dispose();
+						
+						
+					}
 				}
 				
-				MainFrame frame = new MainFrame((int) spinner.getValue(), txtField_url.getText(), txtField_driver.getText(), driver_type, phase_info_vec);
-				frmTestRunner.dispose();
-				//logs.set_logs("made it testframe 132");
+				
 			}
 		});
 		
@@ -540,6 +565,7 @@ public class TestFrame extends JFrame {
 					else {
 						//TODO: create notificaiton window that it needs to be selected
 					}
+					counter = list.getSelectedIndex();
 					PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction, message, delay, frmTestRunner, driver_loc, driver_type);
 					phase_info_vec.set(index, selected_phase);
 					phase_list.set(index, selected_phase.get_phase_name());

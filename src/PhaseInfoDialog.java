@@ -11,10 +11,13 @@ import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
 import javax.swing.JProgressBar;
@@ -31,21 +34,22 @@ public class PhaseInfoDialog extends JDialog {
 	private JTextField txtField_type;
 	private String file_name;
 	private boolean take_screenshot_selected;
+	private boolean cancel_check;
+
 
 	
 	
-	//Used for viewing phase
+	// Used for viewing phase
 	public PhaseInfoDialog(int index, Vector<PhaseInfo> phase_info_vec, PhaseInfo phase_info, String url, String phase_name, String element, String screenshot, String interaction, String message, int delay, JFrame frame, String driver_loc, String driver_type) {
 		take_screenshot_selected = false;
+		this.cancel_check = false;
 		JDialog dialog = new JDialog(frame);
 		dialog.setModal(true);
 		dialog.setTitle("Phase Frame");
 		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		
 		dialog.setBounds(100, 100, 562, 464);
 		contentPanel = new JPanel();
-//		dialog.getContentPane().setLayout(new BorderLayout());
-//		dialog.setContentPane(contentPanel);
-//		contentPanel.setLayout(new FlowLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		dialog.setContentPane(contentPanel);
 		
@@ -73,6 +77,19 @@ public class PhaseInfoDialog extends JDialog {
 		
 		JRadioButton rdbtn_type = new JRadioButton("Type:");
 		
+		dialog.addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent we)
+		    { 
+		    	String opt_buttons[] = {"Yes", "No"};
+		        int result = JOptionPane.showOptionDialog(null, "Are you sure you want to exit? This phase will not be saved.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[1]);
+		        if(result == JOptionPane.YES_OPTION) {
+		        	dialog.dispose();
+		        	set_cancel_check(true);
+		        }
+		    }
+		});
+		
 		
 		
 		btnGroup.add(rdbtn_lClick);
@@ -98,8 +115,8 @@ public class PhaseInfoDialog extends JDialog {
 		}
 		
 		
-		JButton btnNewButton = new JButton("Ok");
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btn_done = new JButton("Ok");
+		btn_done.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				String text = txtField_phaseName.getText();
@@ -113,35 +130,77 @@ public class PhaseInfoDialog extends JDialog {
 				System.out.println(phase_info.get_screenshot());
 				
 				String interaction_type = "";
-				if (rdbtn_lClick.isSelected()) {
-					phase_info.set_interaction_type("Lclick");
-					interaction_type = "Lclick";
+				
+				boolean has_duplicate = false;
+				
+				System.out.println("this is1: " + index);
+				// Checks if a duplicate phase name is being added.
+				for(int i = 0; i < phase_info_vec.size(); i++) {
+					if(i == index) {
+						System.out.println("this is2: " + index);
+						continue;
+					}
+					if(phase_info_vec.get(i).get_phase_name().equals(text)) {
+						has_duplicate = true;
+					}
 				}
-				else if (rdbtn_rClick.isSelected()) {
-					phase_info.set_interaction_type("Rclick");
-					interaction_type = "Rclick";
+				
+				
+				
+				if(txtField_phaseName.getText().isEmpty()) {
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Please enter a unique phase name.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 				}
-				else if (rdbtn_wait.isSelected()) {
-					phase_info.set_interaction_type("Wait");
-					interaction_type = "Wait";
+				else if(has_duplicate) {
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "The desired phase name already exists. Please choose another name.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 				}
-				else if (rdbtn_type.isSelected()) {
-					phase_info.set_interaction_type("Type");
-					interaction_type = "Type";
-					String message = txtField_type.getText();
-					phase_info.set_message(message);
+				else if(!rdbtn_lClick.isSelected() && !rdbtn_rClick.isSelected() && !rdbtn_wait.isSelected() && !rdbtn_type.isSelected()) {
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Please select an interaction type.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
+				}
+				else if(textField_takeScreenshot.getText().isEmpty()) {
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Please upload or take a screenshot.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
+				}
+				else if(rdbtn_type.isSelected() && txtField_type.getText().isEmpty()) {
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Please enter a message to be typed.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
+				}
+				else if(txtField_addElement.getText().isEmpty() && !rdbtn_wait.isSelected()) {
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Please upload an element unlessing choosing the wait option.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 				}
 				else {
-					//TODO: Add notification window
+					if (rdbtn_lClick.isSelected()) {
+						phase_info.set_interaction_type("Lclick");
+						interaction_type = "Lclick";
+					}
+					else if (rdbtn_rClick.isSelected()) {
+						phase_info.set_interaction_type("Rclick");
+						interaction_type = "Rclick";
+					}
+					else if (rdbtn_wait.isSelected()) {
+						phase_info.set_interaction_type("Wait");
+						interaction_type = "Wait";
+					}
+					else  {
+						phase_info.set_interaction_type("Type");
+						interaction_type = "Type";
+						String message = txtField_type.getText();
+						phase_info.set_message(message);
+					}
+					
+					if(take_screenshot_selected == true) {
+						Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element, driver_loc, driver_type, url, phase_info);
+						Thread t = new Thread(ss);
+						t.start();
+					}
+					
+					dialog.dispose();
 				}
 				
-				if(take_screenshot_selected == true) {
-					Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element, driver_loc, driver_type, url, phase_info);
-					Thread t = new Thread(ss);
-					t.start();
-				}
 				
-				dialog.dispose();
 			}
 		});
 		
@@ -231,7 +290,7 @@ public class PhaseInfoDialog extends JDialog {
 										.addGroup(groupLayout.createSequentialGroup()
 											.addGap(24)
 											.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-												.addComponent(btnNewButton)
+												.addComponent(btn_done)
 												.addComponent(rdbtn_type, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
 												.addComponent(rdbtn_lClick)
 												.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, 178, GroupLayout.PREFERRED_SIZE)
@@ -287,7 +346,7 @@ public class PhaseInfoDialog extends JDialog {
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(btnNewButton))
+					.addComponent(btn_done))
 		);
 		contentPanel.setLayout(groupLayout);
 		dialog.setVisible(true);
@@ -316,16 +375,17 @@ public class PhaseInfoDialog extends JDialog {
 	 */
 	public PhaseInfoDialog(int index, Vector<PhaseInfo> phase_info_vec, PhaseInfo phase_info, String url, JFrame frame, String driver_loc, String driver_type) {
 		take_screenshot_selected = false;
+		cancel_check = false;
 		JDialog dialog = new JDialog(frame);
 		dialog.setModalityType(ModalityType.APPLICATION_MODAL);
 		dialog.setModal(true);
 		dialog.setTitle("Phase Frame");
-		dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		//dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+
 		dialog.setBounds(100, 100, 562, 464);
 		contentPanel = new JPanel();
-//		dialog.getContentPane().setLayout(new BorderLayout());
-//		dialog.setContentPane(contentPanel);
-//		contentPanel.setLayout(new FlowLayout());
+
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		dialog.setContentPane(contentPanel);
 		
@@ -368,10 +428,24 @@ public class PhaseInfoDialog extends JDialog {
 		btnGroup.add(rdbtn_type);
 		btnGroup.add(rdbtn_wait);
 		
-		JButton btnNewButton = new JButton("Done");
-		btnNewButton.addActionListener(new ActionListener() {
+		dialog.addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent we)
+		    { 
+		    	String opt_buttons[] = {"Yes", "No"};
+		        int result = JOptionPane.showOptionDialog(null, "Are you sure you want to exit? This phase will not be saved.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[1]);
+		        if(result == JOptionPane.YES_OPTION) {
+		        	dialog.dispose();
+		        	set_cancel_check(true);
+		        }
+		    }
+		});
+		
+		JButton btn_done = new JButton("Done");
+		btn_done.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("poop this:" + index);
 				String text = txtField_phaseName.getText();
 				String element = txtField_addElement.getText();
 				String expected = textField_takeScreenshot.getText() + ".png";
@@ -380,54 +454,76 @@ public class PhaseInfoDialog extends JDialog {
 				phase_info.set_element_path(element);
 				phase_info.set_expected_path(expected);
 				phase_info.set_wait_time(wait_time);
-				//System.out.println(phase_info.get_phase_name());
-				
-				if (rdbtn_lClick.isSelected()) {
-					phase_info.set_interaction_type("Lclick");
-				}
-				else if (rdbtn_rClick.isSelected()) {
-					phase_info.set_interaction_type("Rclick");
-				}
-				else if (rdbtn_wait.isSelected()) {
-					phase_info.set_interaction_type("Wait");
-				}
-				else if (rdbtn_type.isSelected()) {
-					phase_info.set_interaction_type("Type");
-					String message = txtField_type.getText();
-					phase_info.set_message(message);
-				}
-				
-				else {
-					//TODO: Add notification window
-				}
 				
 				String interaction_type = "";
-				if (rdbtn_lClick.isSelected()) {
-					interaction_type = "Lclick";
+				
+				boolean has_duplicate = false;
+				
+				
+				// Checks if a duplicate phase name is being added.
+				for(PhaseInfo phase : phase_info_vec) {
+					if(phase.get_phase_name().equals(text)) {
+						has_duplicate = true;
+					}
 				}
-				else if (rdbtn_rClick.isSelected()) {
-					interaction_type = "Rclick";
+				
+				
+				if(txtField_phaseName.getText().isEmpty()) {
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Please enter a unique phase name.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 				}
-				else if (rdbtn_type.isSelected()) {
-					interaction_type = "Type";
-				} 
-				else if (rdbtn_wait.isSelected()) {
-					interaction_type = "Wait";
-				} 
+				else if(has_duplicate) {
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "The desired phase name already exists. Please choose another name.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
+				}
+				else if(!rdbtn_lClick.isSelected() && !rdbtn_rClick.isSelected() && !rdbtn_wait.isSelected() && !rdbtn_type.isSelected()) {
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Please select an interaction type.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
+				}
+				else if(textField_takeScreenshot.getText().isEmpty()) {
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Please upload or take a screenshot.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
+				}
+				else if(rdbtn_type.isSelected() && txtField_type.getText().isEmpty()) {
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Please enter a message to be typed.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
+				}
+				else if(txtField_addElement.getText().isEmpty() && !rdbtn_wait.isSelected()) {
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Please upload an element unlessing choosing the wait option.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
+				}
 				else {
-					//TODO: Add notification window
-					NotifyFrame nf = new NotifyFrame("Please select an interaction type.");
-				}
+					if (rdbtn_lClick.isSelected()) {
+						interaction_type = "Lclick";
+						phase_info.set_interaction_type("Lclick");
+					}
+					else if (rdbtn_rClick.isSelected()) {
+						phase_info.set_interaction_type("Rclick");
+						interaction_type = "Rclick";
+					}
+					else if (rdbtn_wait.isSelected()) {
+						phase_info.set_interaction_type("Wait");
+						interaction_type = "Wait";
+					}
+					else {
+						phase_info.set_interaction_type("Type");
+						String message = txtField_type.getText();
+						phase_info.set_message(message);
+						interaction_type = "Type";
+					}
+					
 
-				if(take_screenshot_selected == true) {
-					Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element, driver_loc, driver_type, url, phase_info);
-					Thread t = new Thread(ss);
-					t.start();
+					if(take_screenshot_selected == true) {
+						Screenshotter ss = new Screenshotter(index ,phase_info_vec, file_name, interaction_type, element, driver_loc, driver_type, url, phase_info);
+						Thread t = new Thread(ss);
+						t.start();
+					}
+					
+					
+					dialog.dispose();
 				}
 				
 				
-				//phase_info_vec.add(phase_info);
-				dialog.dispose();
 			}
 		});
 		
@@ -512,7 +608,7 @@ public class PhaseInfoDialog extends JDialog {
 												.addComponent(rdbtn_rClick, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
 												.addComponent(rdbtn_type, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
 												.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, 178, GroupLayout.PREFERRED_SIZE)
-												.addComponent(btnNewButton))
+												.addComponent(btn_done))
 											.addPreferredGap(ComponentPlacement.RELATED)))
 									.addGap(148)))
 							.addGap(38))
@@ -563,34 +659,15 @@ public class PhaseInfoDialog extends JDialog {
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(txtField_type, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
-					.addComponent(btnNewButton)
+					.addComponent(btn_done)
 					.addContainerGap(30, Short.MAX_VALUE))
 		);
 		contentPanel.setLayout(groupLayout);
 		dialog.setVisible(true);
 		
-//		dialog.getContentPane().add(contentPanel, BorderLayout.CENTER);
-//		{
-//			JPanel buttonPane = new JPanel();
-//			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
-//			getContentPane().add(buttonPane, BorderLayout.SOUTH);
-//			{
-//				JButton okButton = new JButton("OK");
-//				okButton.setActionCommand("OK");
-//				buttonPane.add(okButton);
-//				getRootPane().setDefaultButton(okButton);
-//			}
-//			{
-//				JButton cancelButton = new JButton("Cancel");
-//				cancelButton.setActionCommand("Cancel");
-//				buttonPane.add(cancelButton);
-//			}
-//		}
+
 	}
 	
-	public String get_text() {
-		return txtField_phaseName.getText();
-	}
 	
 	public String format_path(String path) {
 		if(path.endsWith(".png")) {
@@ -600,5 +677,13 @@ public class PhaseInfoDialog extends JDialog {
 			String new_path = path + ".png";
 			return new_path;
 		}
+	}
+	
+	private void set_cancel_check(boolean checker) {
+		this.cancel_check = checker;
+	}
+	
+	public boolean get_cancel_check() {
+		return this.cancel_check;
 	}
 }

@@ -50,10 +50,7 @@ public class Screenshotter implements Runnable   {
 	public void run() {
 		// TODO Auto-generated method stub
 		
-		 System.out.println("Thread is running...");
-		 System.out.println(interaction);
-		 System.out.println(phase_info_vec.size());
-		 System.out.println(index);
+
 		
 		WebDriver driver;
 		if(driver_type.equals("chrome")) {
@@ -76,29 +73,14 @@ public class Screenshotter implements Runnable   {
 			driver.get(url);
 	        driver.manage().window().maximize();
 
-	        // Click on Browse button and handle windows pop up using Sikuli
-	        //driver.findElement(By.xpath(".//*[@id='photoimg']")).click();
-	        //s.wait(fileInputTextBox, 20);
-	        //s.type(fileInputTextBox, inputFilePath + "Test.docx");
-	       // s.click(openButton);
+	      
 
 	        System.out.println("Line 69.");
 	        Screen s = new Screen();
 	        System.out.println("Line 71.");
 	        Pattern pattern = new Pattern(element);
 	        System.out.println("Line 73.");
-//	        try {
-//				s.wait(textbox, 5000);
-//			} catch (FindFailed e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//	        try {
-//				s.type(textbox, phase_info_vec.get(0).get_message());
-//			} catch (FindFailed e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+
 	        String interaction_type = phase_info_vec.get(0).get_interaction_type();
 	        switch(interaction_type) {
 	        case "Lclick":
@@ -158,18 +140,8 @@ public class Screenshotter implements Runnable   {
 				e.printStackTrace();
 			}
 	        System.out.println("Took Screenshot"  + " saved at " + screenShot);
-	      //  driver.quit();
 		} 
 		else {
-			//driver.get(url);
-			//driver.get("http://google.com");
-	        //driver.manage().window().maximize();
-
-	        // Click on Browse button and handle windows pop up using Sikuli
-	        //driver.findElement(By.xpath(".//*[@id='photoimg']")).click();
-	        //s.wait(fileInputTextBox, 20);
-	        //s.type(fileInputTextBox, inputFilePath + "Test.docx");
-	       // s.click(openButton);
 
 	        System.out.println("Line 111.");
 	        Screen s = new Screen();
@@ -273,7 +245,6 @@ public class Screenshotter implements Runnable   {
 	        System.out.println(element);
 	        System.out.println("Line 180.");
 	        System.out.println(interaction);
-	        //String interaction_type = phase_info_vec.get(i).get_interaction_type();
 	        switch(interaction) {
 	        case "Lclick 232":
 	        	try {

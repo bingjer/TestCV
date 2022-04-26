@@ -38,43 +38,27 @@ import javax.swing.JScrollPane;
 import javax.swing.JList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Font;
+import javax.swing.SwingConstants;
 
 public class MainFrame extends JFrame  {
 
 	private JPanel contentPane;
-	private JProgressBar progressBar;
+	private Vector<PhaseInfo> phase_info_vec;
+	private String url;
+	private String driver_loc;
+	private String driver_type;
+	private int run_counter;
+	private String workfolder;
 
-	/**
-	 * Launch the application.
-	 */
-//	public static void main(String[] args) {
-//		EventQueue.invokeLater(new Runnable() {
-//			public void run() {
-//				try {
-//					MainFrame frame = new MainFrame();
-//					frame.setVisible(true);
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//			}
-//		});
-//	}
 	
-	Vector<PhaseInfo> phase_info_vec;
-	String url;
-	String driver_loc;
-	String driver_type;
-	int run_counter;
-
-	/**
-	 * Create the frame.
-	 */
-	public MainFrame(int run_counter, String url, String driver_loc, String driver_type, Vector<PhaseInfo> phase_info_vec) {
+	public MainFrame(int run_counter, String url, String driver_loc, String driver_type, Vector<PhaseInfo> phase_info_vec, String workfolder) {
 		this.phase_info_vec = phase_info_vec;	
 		this.url = url;
 		this.driver_loc = driver_loc;
 		this.driver_type = driver_type;
 		this.run_counter = run_counter;
+		this.workfolder = workfolder;
 		initialize();
 		
 	}
@@ -101,8 +85,6 @@ public class MainFrame extends JFrame  {
 		
 		JToolBar toolBar = new JToolBar();
 		
-		progressBar = new JProgressBar();
-		
 		DefaultListModel logs = new DefaultListModel();
 
 		
@@ -110,14 +92,9 @@ public class MainFrame extends JFrame  {
 
 		JScrollPane scrollpane = new JScrollPane(list);
 		
-//		int counter = 0; 
-//		
-//		for (PhaseInfo phase : phase_info_vec) {
-//			logs.add(counter, phase.get_phase_name());
-//			list.setModel(logs);
-//			counter++;
-//		}
-		
+		JLabel label = new JLabel("TestCV");
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		label.setFont(new Font("Stencil", Font.BOLD | Font.ITALIC, 30));
 		
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -125,23 +102,23 @@ public class MainFrame extends JFrame  {
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addComponent(toolBar, GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGap(214)
-					.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap(283, Short.MAX_VALUE))
-				.addGroup(gl_contentPane.createSequentialGroup()
 					.addGap(111)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 435, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblNewLabel))
 					.addContainerGap(97, Short.MAX_VALUE))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGap(247)
+					.addComponent(label, GroupLayout.PREFERRED_SIZE, 129, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(267, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addComponent(toolBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-					.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(30)
+					.addGap(29)
+					.addComponent(label, GroupLayout.PREFERRED_SIZE, 31, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
 					.addComponent(lblNewLabel)
 					.addGap(18)
 					.addComponent(scrollpane, GroupLayout.PREFERRED_SIZE, 172, GroupLayout.PREFERRED_SIZE)
@@ -186,140 +163,10 @@ public class MainFrame extends JFrame  {
 		toolBar.add(btnNewButton_1);
 		contentPane.setLayout(gl_contentPane);
 		frame.setVisible(true);
-		
-		//Uncomment to add welcome frame back
-		//Logger test = new Logger();
-		//WelcomeFrame wcFrame = new WelcomeFrame();
-		//WelcomeDialog wcFrame = new WelcomeDialog(this, test);
-		//System.out.println(test.get_logs());
-		
-		//test.set_logs("test");
-		//System.out.println(test.get_logs());
-		//System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
-		
-//		ImageComparison test = new ImageComparison("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test3.png.png");
-//		test.compareImages("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\OneDrive\\Documents\\test3.png.png");
-//		
-//		ImageComparison test = new ImageComparison("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test3.png.png");
-//		test.compareImages("C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png", "C:\\Users\\adamn\\OneDrive\\Documents\\test2.png.png");
 		System.out.println("no issue yet");
-			Driver ss = new Driver(run_counter, phase_info_vec, logs, list, url, driver_loc, driver_type);
+			Driver ss = new Driver(run_counter, phase_info_vec, logs, list, url, driver_loc, driver_type, workfolder);
 			Thread t = new Thread(ss);
 			t.start();
-			//run_counter--;
 		
-	}
-	
-	
-	
-	
-	
-//	public void screenshot() {
-//		WebDriver driver;
-//		System.setProperty("webdriver.chrome.driver", "D:\\Downloads\\chromedriver_98.exe");
-//        driver = new ChromeDriver();
-//        System.out.println(phase_info_vec.size());
-//		
-//			//driver.get(url);
-//			//driver.get("http://google.com");
-//	        //driver.manage().window().maximize();
-//
-//	        // Click on Browse button and handle windows pop up using Sikuli
-//	        //driver.findElement(By.xpath(".//*[@id='photoimg']")).click();
-//	        //s.wait(fileInputTextBox, 20);
-//	        //s.type(fileInputTextBox, inputFilePath + "Test.docx");
-//	       // s.click(openButton);
-//
-//	        System.out.println("Line 111.");
-//	        Screen s = new Screen();
-//	        System.out.println("Line 113.");
-//	        
-//	        for(int i = 0; i < phase_info_vec.size(); i++) {
-//	        	System.out.println(phase_info_vec.size());
-//	        	if(i == 0) {
-//	        		driver.get(url); // change to url in live
-//	    	        driver.manage().window().maximize();
-//	        	}
-//	        	
-//		        System.out.println("IN SECOND LOOOP");
-//
-//	        	//Pattern pattern = new Pattern(phase.get_element());
-//		        String element_path = phase_info_vec.get(i).get_element();
-//	        	Pattern pattern = new Pattern(element_path);
-//		        System.out.println("Line 127.");
-//		        String interaction_type = phase_info_vec.get(i).get_interaction_type();
-//		        
-//		        System.out.println(interaction_type);
-//		        switch(interaction_type) {
-//		        case "Lclick":
-//		        	try {
-//						s.wait(pattern, 5000);
-//					} catch (FindFailed e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//			        try {
-//			        	s.click(pattern, 5000);
-//					} catch (FindFailed e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//		        	break;
-//		        case "Rclick":
-//		        	try {
-//						s.wait(pattern, 5000);
-//					} catch (FindFailed e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//			        try {
-//			        	s.rightClick(pattern, 5000);
-//					} catch (FindFailed e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//		        	break;
-//		        case "Type":
-//		        	try {
-//						s.wait(pattern, 5000);
-//					} catch (FindFailed e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//			        try {
-//						s.type(pattern, "test this");
-//					} catch (FindFailed e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//		        default:
-//		        	break;
-//		        }
-//		        
-//		        //Selenium way to take a screenshot
-//		        String file_name = ("C:\\Users\\adamn\\OneDrive\\Documents\\testcvimg_" + (i + 1) + ".png");
-//		        File screenShot = new File(file_name).getAbsoluteFile();
-//		        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-//		        try {
-//					FileUtils.copyFile(scrFile, screenShot);
-//				} catch (IOException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//		        System.out.println("Took Screenshot"  + " saved at " + screenShot);
-//		        
-//		        //compare the two images
-//		        ImageComparison test = new ImageComparison(phase_info_vec.get(i).get_screenshot(), file_name);
-//				
-//				
-//		        
-//	        }
-//	        
-//	        driver.quit();
-//	        
-//	       
-//		}
-        
-        
+	}  
 }

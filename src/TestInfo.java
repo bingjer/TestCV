@@ -22,15 +22,6 @@ public class TestInfo {
 		int counter = 1;
 		
 		for(PhaseInfo phase : phase_info_vec) {
-			//System.out.println(phase.get_phase_name());
-			//JSONArray phase_info_array = new JSONArray();
-//			phase_info_array.add("Phase: " + phase.get_phase_name());
-//			phase_info_array.add("URL: " + phase.get_url_name());
-//			phase_info_array.add("Element: " + phase.get_element());
-//			phase_info_array.add("Screenshot: " + phase.get_screenshot());
-//			phase_info_array.add("Interaction: " + phase.get_interaction_type());
-//			phase_info_array.add("Message: " + phase.get_message());
-			//Map inner_obj = new LinkedHashMap();
 			JsonObject inner_obj = new JsonObject();
 			inner_obj.addProperty("Phase", phase.get_phase_name());
 			inner_obj.addProperty("Element", phase.get_element());
@@ -40,14 +31,10 @@ public class TestInfo {
 			inner_obj.addProperty("Time", phase.get_wait_time());
 			System.out.println("here1");
 			System.out.println(phase.get_screenshot());
-			//JSONObject inner_json_obj = new JSONObject();
 			String string_counter = String.valueOf(counter);
 			json_obj.add(string_counter, inner_obj);
-			//System.out.println(obj);
-			
 			++counter;
 		}
-		//JsonObject json_obj = new JsonObject();
 		try {
 			System.out.println("here1");
 			System.out.println(json_obj.toString());
@@ -72,17 +59,8 @@ public class TestInfo {
 	public void load_json(String file_name, Vector<PhaseInfo> phase_vec) throws FileNotFoundException, JsonSyntaxException  {
 		Object obj;
 		FileReader read_file = new FileReader(file_name);
-		//System.out.println(read_file);
 		obj = new JsonParser().parse(read_file);
-		//System.out.println(obj);
 		JsonObject json_obj = (JsonObject) obj;
-		//System.out.println(json_obj);
-//		json_obj.keySet().forEach(key -> {
-//			Object value = json_obj.get(key);
-//			System.out.println(value);
-//		});
-		//System.out.println(json_obj);
-		//System.out.println(inner_value_string);
 		for(String key : json_obj.keySet()) {
 			Object value = json_obj.get(key);
 			JsonObject inner_json_obj = (JsonObject) value;

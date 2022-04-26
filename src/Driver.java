@@ -39,9 +39,10 @@ public class Driver implements Runnable   {
 	private String driver_loc;
 	private String driver_type;
 	private int test_run_counter;
+	private String workfolder;
 	
 	
-	public Driver(int test_run_counter, Vector<PhaseInfo> phase_info_vec, DefaultListModel logs, JList list, String url, String driver_loc, String driver_type) {
+	public Driver(int test_run_counter, Vector<PhaseInfo> phase_info_vec, DefaultListModel logs, JList list, String url, String driver_loc, String driver_type, String workfolder) {
 		this.file_name = file_name;
 		this.phase_info_vec = phase_info_vec;
 		this.counter = 0;
@@ -51,6 +52,7 @@ public class Driver implements Runnable   {
 		this.driver_loc = driver_loc;
 		this.driver_type = driver_type;
 		this.test_run_counter = test_run_counter;
+		this.workfolder = workfolder;
 		
 	}
 	
@@ -59,14 +61,7 @@ public class Driver implements Runnable   {
 	public void run() {
 		int run_counter = 1;
 		while(test_run_counter > 0) {
-//			// Clear Images folder before each test
-//			 try {
-//					FileUtils.cleanDirectory(new File("Images"));
-//				} catch (IOException e1) {
-//					// TODO Auto-generated catch block
-//					e1.printStackTrace();
-//					NotifyFrame nf = new NotifyFrame("clearing directory error");
-//				}	
+
 			
 		WebDriver driver;
 		//System.setProperty("webdriver.chrome.driver", "D:\\Downloads\\chromedriver_98.exe");
@@ -82,19 +77,7 @@ public class Driver implements Runnable   {
 			driver = null;
 		}
 		
-//		System.setProperty("webdriver.chrome.driver", driver_loc);
-//        driver = new ChromeDriver();
-        //System.out.println(phase_info_vec.size());
-        
-			//driver.get(url);
-			//driver.get("http://google.com");
-	        //driver.manage().window().maximize();
 
-	        // Click on Browse button and handle windows pop up using Sikuli
-	        //driver.findElement(By.xpath(".//*[@id='photoimg']")).click();
-	        //s.wait(fileInputTextBox, 20);
-	        //s.type(fileInputTextBox, inputFilePath + "Test.docx");
-	       // s.click(openButton);
 
 	        Screen s = new Screen();
 	        
@@ -112,21 +95,6 @@ public class Driver implements Runnable   {
 			
 	        
 	        for(int i = 0; i < phase_info_vec.size(); i++) {
-//	        	if(phase_info_vec.get(i).get_wait_time() != 0) {
-//	        		synchronized(this) {
-//	    	        	try {
-//		        			System.out.println("waiting");
-//
-//	    					this.wait(phase_info_vec.get(i).get_wait_time() * 1000);
-//		        			System.out.println("has it been 5 sec?");
-//
-//	    				} catch (InterruptedException e) {
-//	    					// TODO Auto-generated catch block
-//	    					e.printStackTrace();
-//	    				}
-//	    	        }
-//
-//	        	}
 	        	System.out.println(phase_info_vec.size());
 	        	System.out.println(phase_info_vec.get(i).get_screenshot());
 	        	if(i == 0) {
@@ -221,7 +189,7 @@ public class Driver implements Runnable   {
 		        
 		        //Selenium way to take a screenshot
 		       
-		        String file_name = ("TestCV_Images\\testcvimg_" + (i + 1) + ".png");
+		        String file_name = workfolder + ("\\TestCV_Images\\testcvimg_" + (i + 1) + ".png");
 		        File screenShot = new File(file_name).getAbsoluteFile();
 		        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 		        try {
@@ -232,22 +200,6 @@ public class Driver implements Runnable   {
 				}
 		        System.out.println("Took Screenshot"  + " saved at " + screenShot);
 		        
-		        //compare the two images
-//		        ImageComparison test = new ImageComparison("C:\\Users\\adamn\\OneDrive\\Documents\\tst.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test2.png.png");
-//				test.compareImages("C:\\Users\\adamn\\OneDrive\\Documents\\tst.png.png", "C:\\Users\\adamn\\\\OneDrive\\Documents\\test2.png.png");
-		        
-		        //DefaultListModel logs = new DefaultListModel();
-
-				
-				//JList list = new JList(logs);
-
-				//JScrollPane scrollpane = new JScrollPane(list);
-				
-				
-				
-		        
-				
-				
 		        
 		        ImageComparison test = new ImageComparison(phase_info_vec.get(i).get_screenshot(), screenShot.getAbsolutePath());
 
