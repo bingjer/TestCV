@@ -43,7 +43,6 @@ public class Driver implements Runnable   {
 	
 	
 	public Driver(int test_run_counter, Vector<PhaseInfo> phase_info_vec, DefaultListModel logs, JList list, String url, String driver_loc, String driver_type, String workfolder) {
-		this.file_name = file_name;
 		this.phase_info_vec = phase_info_vec;
 		this.counter = 0;
 		this.logs = logs;
@@ -144,13 +143,13 @@ public class Driver implements Runnable   {
 		        switch(interaction_type) {
 		        case "Lclick":
 		        	try {
-						s.wait(pattern, 5000);
+						s.wait(pattern, 10);
 					} catch (FindFailed e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 			        try {
-			        	s.click(pattern, 5000);
+			        	s.click(pattern, 10);
 					} catch (FindFailed e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -158,13 +157,13 @@ public class Driver implements Runnable   {
 		        	break;
 		        case "Rclick":
 		        	try {
-						s.wait(pattern, 5000);
+						s.wait(pattern, 10);
 					} catch (FindFailed e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 			        try {
-			        	s.rightClick(pattern, 5000);
+			        	s.rightClick(pattern, 10);
 					} catch (FindFailed e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -172,7 +171,7 @@ public class Driver implements Runnable   {
 		        	break;
 		        case "Type":
 		        	try {
-						s.wait(pattern, 5000);
+						s.wait(pattern, 10);
 					} catch (FindFailed e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

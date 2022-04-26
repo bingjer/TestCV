@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
@@ -85,44 +86,56 @@ public class Screenshotter implements Runnable   {
 	        switch(interaction_type) {
 	        case "Lclick":
 	        	try {
-					s.wait(pattern, 5000);
+					s.wait(pattern, 10);
 				} catch (FindFailed e) {
-					// TODO Auto-generated catch block
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
+					driver.quit();
 				}
 		        try {
-		        	s.click(pattern, 5000);
+		        	s.click(pattern, 10);
 				} catch (FindFailed e) {
-					// TODO Auto-generated catch block
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
+					driver.quit();
 				}
 	        	break;
 	        case "Rclick":
 	        	try {
-					s.wait(pattern, 5000);
+					s.wait(pattern, 10);
 				} catch (FindFailed e) {
-					// TODO Auto-generated catch block
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
+					driver.quit();
 				}
 		        try {
-		        	s.rightClick(pattern, 5000);
+		        	s.rightClick(pattern, 10);
 				} catch (FindFailed e) {
-					// TODO Auto-generated catch block
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
+					driver.quit();
 				}
 	        	break;
 	        case "Type":
 	        	try {
-					s.wait(pattern, 5000);
+					s.wait(pattern, 10);
 				} catch (FindFailed e) {
-					// TODO Auto-generated catch block
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Could not find element.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
+					driver.quit();
 				}
 		        try {
 					s.type(pattern, phase_info_vec.get(0).get_message());
 				} catch (FindFailed e) {
-					// TODO Auto-generated catch block
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
+					driver.quit();
 				}
 	        default:
 	        	break;
@@ -180,50 +193,63 @@ public class Screenshotter implements Runnable   {
 		        switch(interaction_type) {
 		        case "Lclick":
 		        	try {
-						s.wait(pattern, 5000);
+						s.wait(pattern, 10);
 					} catch (FindFailed e) {
-						// TODO Auto-generated catch block
+						String opt_buttons[] = {"Ok"};
+				        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 						e.printStackTrace();
+						driver.quit();
 					}
 			        try {
-			        	s.click(pattern, 5000);
+			        	s.click(pattern, 10);
 					} catch (FindFailed e) {
-						// TODO Auto-generated catch block
+						String opt_buttons[] = {"Ok"};
+				        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 						e.printStackTrace();
+						driver.quit();
 					}
 		        	break;
 		        case "Rclick":
 		        	try {
-						s.wait(pattern, 5000);
+						s.wait(pattern, 10);
 					} catch (FindFailed e) {
-						// TODO Auto-generated catch block
+						String opt_buttons[] = {"Ok"};
+				        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 						e.printStackTrace();
+						driver.quit();
 					}
 			        try {
-			        	s.rightClick(pattern, 5000);
+			        	s.rightClick(pattern, 10);
 					} catch (FindFailed e) {
-						// TODO Auto-generated catch block
+						String opt_buttons[] = {"Ok"};
+				        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 						e.printStackTrace();
+						driver.quit();
 					}
 		        	break;
 		        case "Type":
 		        	try {
-						s.wait(pattern, 5000);
+						s.wait(pattern, 10);
 					} catch (FindFailed e) {
-						// TODO Auto-generated catch block
+						String opt_buttons[] = {"Ok"};
+				        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 						e.printStackTrace();
+						driver.quit();
 					}
 			        try {
 						s.type(pattern, phase_info_vec.get(i).get_message());
 					} catch (FindFailed e) {
-						// TODO Auto-generated catch block
+						String opt_buttons[] = {"Ok"};
+				        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 						e.printStackTrace();
+						driver.quit();
 					}
 		        default:
 		        	break;
 		        }
 		        
 	        }
+	        
 	        
 	        if(phase_info.get_wait_time() != 0) {
         		synchronized(this) {
@@ -246,48 +272,60 @@ public class Screenshotter implements Runnable   {
 	        System.out.println("Line 180.");
 	        System.out.println(interaction);
 	        switch(interaction) {
-	        case "Lclick 232":
+	        case "Lclick":
 	        	try {
 	        		System.out.println("Finding element...");
-					s.wait(pattern, 5000);
+					s.wait(pattern, 10);
 					
 				} catch (FindFailed e) {
-					// TODO Auto-generated catch block
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
+					driver.quit();
 				}
 		        try {
-		        	s.click(pattern, 5000);
+		        	s.click(pattern, 10);
 				} catch (FindFailed e) {
-					// TODO Auto-generated catch block
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
+					driver.quit();
 				}
 	        	break;
 	        case "Rclick":
 	        	try {
-					s.wait(pattern, 5000);
+					s.wait(pattern, 10);
 				} catch (FindFailed e) {
-					// TODO Auto-generated catch block
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
+					driver.quit();
 				}
 		        try {
-		        	s.rightClick(pattern, 5000);
+		        	s.rightClick(pattern, 10);
 				} catch (FindFailed e) {
-					// TODO Auto-generated catch block
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
+					driver.quit();
 				}
 	        	break;
 	        case "Type":
 	        	try {
-					s.wait(pattern, 5000);
+					s.wait(pattern, 10);
 				} catch (FindFailed e) {
-					// TODO Auto-generated catch block
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
+					driver.quit();
 				}
 		        try {
 					s.type(pattern, phase_info.get_message());
 				} catch (FindFailed e) {
-					// TODO Auto-generated catch block
+					String opt_buttons[] = {"Ok"};
+			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
+					driver.quit();
 				}
 	        default:
 	        	break;
@@ -300,8 +338,10 @@ public class Screenshotter implements Runnable   {
 	        try {
 				FileUtils.copyFile(scrFile, screenShot);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				String opt_buttons[] = {"Ok"};
+		        JOptionPane.showOptionDialog(null, "Could take screenshot. Please ensure elements are valid and try again.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 				e.printStackTrace();
+				driver.quit();
 			}
 	        System.out.println("Took Screenshot"  + " saved at " + screenShot);
 		}

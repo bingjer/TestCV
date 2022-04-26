@@ -179,7 +179,6 @@ public class TestFrame extends JFrame {
 						NotifyFrame nf = new NotifyFrame("Please select your driver type.");
 					}
 					else if(txtField_url.getText().isEmpty()) {
-						NotifyFrame nf = new NotifyFrame("Please fill out the URL.");
 					}
 					else if(txtField_driver.getText().isEmpty()) {
 						NotifyFrame nf = new NotifyFrame("Please select your driver.");
