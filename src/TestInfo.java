@@ -1,23 +1,21 @@
+// This file TestInfo.java writes and reads JSON text files containing TestCV test information.
+
 import java.util.Vector;
+import javax.swing.JOptionPane;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-
 import com.google.gson.JsonElement;
-//import org.json.simple.JSONArray;
-//import org.json.simple.JSONObject;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-//import org.json.simple.parser.*;
-import com.google.gson.stream.MalformedJsonException;
 
 public class TestInfo {
 	private static FileWriter file;
 	
 	
-	public void write_json(String file_name, Vector<PhaseInfo> phase_info_vec) {
+	public void write_json(String file_name, Vector<PhaseInfo> phase_info_vec) throws IOException {
 		JsonObject json_obj = new JsonObject();
 		int counter = 1;
 		
@@ -35,25 +33,28 @@ public class TestInfo {
 			json_obj.add(string_counter, inner_obj);
 			++counter;
 		}
-		try {
+		//try {
 			System.out.println("here1");
 			System.out.println(json_obj.toString());
 			System.out.println(file_name);
 			file = new FileWriter(file_name);
 			file.write(json_obj.toString());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			NotifyFrame nf = new NotifyFrame("Could not write to file. Please try again.");
-		} finally {
-			try {
+		//} catch (IOException e) {
+		//	e.printStackTrace();
+		//	String opt_buttons[] = {"Ok"};
+	    //    JOptionPane.showOptionDialog(null, "Could not write to file. Please try again.", "TestCV", 
+	     //   		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
+		//} finally {
+		//	try {
 				file.flush();
 				file.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-				NotifyFrame nf = new NotifyFrame("Could not write to file. Please try again.");
-			}
-		}
+		//	} catch (IOException e) {
+		//		e.printStackTrace();
+		//		String opt_buttons[] = {"Ok"};
+		//        JOptionPane.showOptionDialog(null, "Could not write to file. Please try again.", "TestCV", 
+		    //    		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
+		//	}
+	//	}
 	}
 	
 	public void load_json(String file_name, Vector<PhaseInfo> phase_vec) throws FileNotFoundException, JsonSyntaxException  {

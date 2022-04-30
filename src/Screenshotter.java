@@ -1,18 +1,10 @@
-import java.awt.AWTException;
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.awt.Robot;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
+// This file Screenshotter.java handles the driver logic to take a screenshot in the phase dialog window.
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
-
-import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
-
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -49,39 +41,38 @@ public class Screenshotter implements Runnable   {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		
-
-		
-		WebDriver driver;
-		if(driver_type.equals("chrome")) {
-			System.setProperty("webdriver.chrome.driver", driver_loc);
-	        driver = new ChromeDriver();
+		// Create WebDriver and determine if chrome or firefox.
+		WebDriver driver = null;
+		try {
+			if(driver_type.equals("chrome")) {
+				System.setProperty("webdriver.chrome.driver", driver_loc);
+		        driver = new ChromeDriver();
+			} 
+			else {
+				System.setProperty("webdriver.gecko.driver", driver_loc);
+		        driver = new FirefoxDriver();
+			}
 		} 
-		else if (driver_type.equals("firefox")){
-			System.setProperty("webdriver.gecko.driver", driver_loc);
-	        driver = new FirefoxDriver();
+		catch (Exception e) {
+			String opt_buttons[] = {"Ok"};
+	        JOptionPane.showOptionDialog(null, "Could not start driver. Make sure you have the correct driver selected for your browser version.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
+	        
 		}
-		else {
-			driver = null;
-		}
-        System.out.println(phase_info_vec.size());
-        System.out.println(index);
+		
+		
+		
+		
+		// Handles edge case where the phase list is empty.
 		if(index == 0) {
-			// Open Chrome browser    
-	        System.out.println("am empty");
-	        //driver.get(url);
+			// Starts the browser and opens it to the URL.
 			driver.get(url);
+			//Maximizes the browser window
 	        driver.manage().window().maximize();
-
-	      
-
-	        System.out.println("Line 69.");
+	        // Creates screen object which mirrors the browser window.
 	        Screen s = new Screen();
-	        System.out.println("Line 71.");
+	        // Creates a pattern object to interact with based off the provided screenshot.
 	        Pattern pattern = new Pattern(element);
-	        System.out.println("Line 73.");
-
+	        
 	        String interaction_type = phase_info_vec.get(0).get_interaction_type();
 	        switch(interaction_type) {
 	        case "Lclick":
@@ -92,9 +83,10 @@ public class Screenshotter implements Runnable   {
 			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
 					driver.quit();
+					break;
 				}
 		        try {
-		        	s.click(pattern, 10);
+		        	s.click(pattern);
 				} catch (FindFailed e) {
 					String opt_buttons[] = {"Ok"};
 			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
@@ -110,9 +102,10 @@ public class Screenshotter implements Runnable   {
 			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
 					driver.quit();
+					break;
 				}
 		        try {
-		        	s.rightClick(pattern, 10);
+		        	s.rightClick(pattern);
 				} catch (FindFailed e) {
 					String opt_buttons[] = {"Ok"};
 			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
@@ -120,14 +113,28 @@ public class Screenshotter implements Runnable   {
 					driver.quit();
 				}
 	        	break;
+	        case "Wait":
+	        	synchronized(this) {
+	    	        try {
+	    				this.wait(phase_info_vec.get(0).get_wait_time() * 1000);
+
+	    			} 
+	    	        catch (InterruptedException e) {
+	    				String opt_buttons[] = {"Ok"};
+	    			       JOptionPane.showOptionDialog(null, "Could not wait. Please start test over.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);	    					
+	    			       e.printStackTrace();
+	    			}
+	    	    }
+	        	break;
 	        case "Type":
 	        	try {
 					s.wait(pattern, 10);
 				} catch (FindFailed e) {
 					String opt_buttons[] = {"Ok"};
-			        JOptionPane.showOptionDialog(null, "Could not find element.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
+			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
 					driver.quit();
+					break;
 				}
 		        try {
 					s.type(pattern, phase_info_vec.get(0).get_message());
@@ -137,59 +144,66 @@ public class Screenshotter implements Runnable   {
 					e.printStackTrace();
 					driver.quit();
 				}
+		        break;
 	        default:
 	        	break;
 	        }
 	        
-	        
-	        //Selenium way to take a screenshot
+	        // Default wait 3 seconds before taking a screenshot.
+	        if(interaction_type != "Wait") {
+	        	synchronized(this) {
+	    	        try {
+	    				
+	    	        	this.wait(3000);
+	    			} 
+	    	        catch (InterruptedException e) {
+	    				String opt_buttons[] = {"Ok"};
+	    			       JOptionPane.showOptionDialog(null, "Could not wait. Please start test over.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);	    					
+	    			       e.printStackTrace();
+	    			}
+	        	}
+	        }
+	        // Selenium way to take a screenshot.
 	        String formatted_file = format_path(file_name);
 	        File screenShot = new File(formatted_file).getAbsoluteFile();
 	        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
 	        try {
 				FileUtils.copyFile(scrFile, screenShot);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				String opt_buttons[] = {"Ok"};
+		        JOptionPane.showOptionDialog(null, "Could not save screenshot. Please start this phase over.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 				e.printStackTrace();
 			}
-	        System.out.println("Took Screenshot"  + " saved at " + screenShot);
 		} 
+		
+		// For all other cases
 		else {
-
-	        System.out.println("Line 111.");
 	        Screen s = new Screen();
-	        System.out.println("Line 113.");
-	        System.out.println(index);
+	        
 	        for(int i = 0; i < index; i++) {
 	        	if(phase_info_vec.get(i).get_wait_time() != 0) {
 	        		synchronized(this) {
 	    	        	try {
-		        			System.out.println("waiting");
-
 	    					this.wait(phase_info_vec.get(i).get_wait_time() * 1000);
-		        			System.out.println("has it been 5 sec?");
 
 	    				} catch (InterruptedException e) {
-	    					// TODO Auto-generated catch block
-	    					e.printStackTrace();
+	    					String opt_buttons[] = {"Ok"};
+	    			        JOptionPane.showOptionDialog(null, "Could not wait. Please start test over.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);	    					
+	    			        e.printStackTrace();
 	    				}
 	    	        }
 
 	        	}
 	        	if(i == 0) {
-	        		driver.get(url); // change to url in live
+	        		driver.get(url); 
 	    	        driver.manage().window().maximize();
 	        	}
 	        	
-		        System.out.println(index);
-
-	        	//Pattern pattern = new Pattern(phase.get_element());
 		        String element_path = phase_info_vec.get(i).get_element();
 	        	Pattern pattern = new Pattern(element_path);
-		        System.out.println("Line 127.");
+	        	
 		        String interaction_type = phase_info_vec.get(i).get_interaction_type();
 		        
-		        System.out.println(interaction_type);
 		        switch(interaction_type) {
 		        case "Lclick":
 		        	try {
@@ -199,9 +213,10 @@ public class Screenshotter implements Runnable   {
 				        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 						e.printStackTrace();
 						driver.quit();
+						break;
 					}
 			        try {
-			        	s.click(pattern, 10);
+			        	s.click(pattern);
 					} catch (FindFailed e) {
 						String opt_buttons[] = {"Ok"};
 				        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
@@ -217,9 +232,10 @@ public class Screenshotter implements Runnable   {
 				        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 						e.printStackTrace();
 						driver.quit();
+						break;
 					}
 			        try {
-			        	s.rightClick(pattern, 10);
+			        	s.rightClick(pattern);
 					} catch (FindFailed e) {
 						String opt_buttons[] = {"Ok"};
 				        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
@@ -235,6 +251,7 @@ public class Screenshotter implements Runnable   {
 				        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 						e.printStackTrace();
 						driver.quit();
+						break;
 					}
 			        try {
 						s.type(pattern, phase_info_vec.get(i).get_message());
@@ -244,37 +261,31 @@ public class Screenshotter implements Runnable   {
 						e.printStackTrace();
 						driver.quit();
 					}
+			        break;
 		        default:
 		        	break;
 		        }
 		        
 	        }
 	        
-	        
+	        // Handles the phase of the current index.
 	        if(phase_info.get_wait_time() != 0) {
         		synchronized(this) {
     	        	try {
-	        			System.out.println("waiting");
-
     					this.wait(phase_info.get_wait_time() * 1000);
-	        			System.out.println("has it been 5 sec?");
-
     				} catch (InterruptedException e) {
-    					// TODO Auto-generated catch block
-    					e.printStackTrace();
+    					String opt_buttons[] = {"Ok"};
+    			        JOptionPane.showOptionDialog(null, "Could not wait. Please start test over.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);	    					
+    			        e.printStackTrace();
     				}
     	        }
 
         	}
 	        
 	        Pattern pattern = new Pattern(element);
-	        System.out.println(element);
-	        System.out.println("Line 180.");
-	        System.out.println(interaction);
 	        switch(interaction) {
 	        case "Lclick":
 	        	try {
-	        		System.out.println("Finding element...");
 					s.wait(pattern, 10);
 					
 				} catch (FindFailed e) {
@@ -282,9 +293,12 @@ public class Screenshotter implements Runnable   {
 			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
 					driver.quit();
+					break;
 				}
 		        try {
-		        	s.click(pattern, 10);
+		        	
+		        	//s.click(pattern, 10);
+		        	s.click(pattern);
 				} catch (FindFailed e) {
 					String opt_buttons[] = {"Ok"};
 			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
@@ -300,9 +314,10 @@ public class Screenshotter implements Runnable   {
 			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
 					driver.quit();
+					break;
 				}
 		        try {
-		        	s.rightClick(pattern, 10);
+		        	s.rightClick(pattern);
 				} catch (FindFailed e) {
 					String opt_buttons[] = {"Ok"};
 			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
@@ -318,6 +333,7 @@ public class Screenshotter implements Runnable   {
 			        JOptionPane.showOptionDialog(null, "Could not find element. Please ensure the element screenshot is valid.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 					e.printStackTrace();
 					driver.quit();
+					break;
 				}
 		        try {
 					s.type(pattern, phase_info.get_message());
@@ -327,11 +343,27 @@ public class Screenshotter implements Runnable   {
 					e.printStackTrace();
 					driver.quit();
 				}
+		        break;
 	        default:
 	        	break;
 	        }
 	        
-	        //Selenium way to take a screenshot
+	     // Default wait 3 seconds before taking a screenshot.
+	        if(interaction != "Wait") {
+	        	synchronized(this) {
+	    	        try {
+	    				
+	    	        	this.wait(3000);
+	    			} 
+	    	        catch (InterruptedException e) {
+	    				String opt_buttons[] = {"Ok"};
+	    			       JOptionPane.showOptionDialog(null, "Could not wait. Please start test over.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);	    					
+	    			       e.printStackTrace();
+	    			}
+	        	}
+	        }
+	        
+	        // Selenium way to take a screenshot
 	        String formatted_file = format_path(file_name);
 	        File screenShot = new File(formatted_file).getAbsoluteFile();
 	        File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
@@ -343,7 +375,6 @@ public class Screenshotter implements Runnable   {
 				e.printStackTrace();
 				driver.quit();
 			}
-	        System.out.println("Took Screenshot"  + " saved at " + screenShot);
 		}
         
 
