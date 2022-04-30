@@ -1,40 +1,21 @@
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
+// This file ResultFrame.java constructs the result window for the viewer to view live logs and save logs to a file.
+
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Vector;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
-import org.apache.commons.io.FileUtils;
-import org.opencv.core.Core;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.sikuli.script.FindFailed;
-import org.sikuli.script.Pattern;
-import org.sikuli.script.Screen;
-
-import javax.swing.JMenuBar;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
-import javax.swing.JInternalFrame;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
-import javax.swing.JTextPane;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JList;
 import java.awt.event.ActionListener;
@@ -55,9 +36,9 @@ public class ResultFrame extends JFrame  {
 	private String workfolder;
 	JFrame frame;
 	DefaultListModel logs;
-
 	
 	public ResultFrame(int run_counter, String url, String driver_loc, String driver_type, Vector<PhaseInfo> phase_info_vec, String workfolder) {
+		// Initialize private members
 		this.phase_info_vec = phase_info_vec;	
 		this.url = url;
 		this.driver_loc = driver_loc;
@@ -66,10 +47,7 @@ public class ResultFrame extends JFrame  {
 		this.workfolder = workfolder;
 		logs = new DefaultListModel();
 		frame = new JFrame();
-		initialize();
-	}
-	
-	private void initialize() {
+		
 		// Frame construction.
 		frame.setTitle("TestCV");
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -140,31 +118,34 @@ public class ResultFrame extends JFrame  {
 		frame.setVisible(true);
 	}  
 	
+	// Creates a listener for the "New Test" button.
 	private void btn_new_listener(JButton btn) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Closes the ResultFrame and opens a new WelcomeFrame.
 				WelcomeFrame wcframe = new WelcomeFrame();
 				frame.dispose();
 			}
 		});
 	}
 	
+	// Creates a listener for the "Save Test" button.
 	private void btn_save_listener(JButton btn) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Opens up the system chooser window for the user to select where to save their test file.
 				JFileChooser j = new JFileChooser();
 				j.showSaveDialog(null);
 				String file = j.getSelectedFile().getAbsolutePath();
 				System.out.println(file);
 				System.out.println(logs.toString());
+				
+				// Writes to the file.
 				try {
-					
 					BufferedWriter  writer = new BufferedWriter(new FileWriter(file, true));
-
 					for(int i =0; i < logs.size(); i++) {
 						writer.write(logs.toArray()[i].toString());
 						writer.newLine();
-						
 					}
 					writer.close();
 				}
@@ -177,6 +158,7 @@ public class ResultFrame extends JFrame  {
 		});
 	}
 	
+	// Creates a listener for the "X" button.
 	private void close_window_listener(JFrame frame) {
 		frame.addWindowListener(new WindowAdapter() {
 		    @Override

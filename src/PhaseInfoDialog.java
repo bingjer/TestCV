@@ -1,5 +1,4 @@
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+// This file PhaseInfoDialog.java handles constructing JDialog frames for adding or viewing phase info.
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -20,9 +19,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
-import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
-import java.awt.Dialog.ModalityType;
 import javax.swing.JSpinner;
 
 public class PhaseInfoDialog extends JDialog {
@@ -37,15 +34,12 @@ public class PhaseInfoDialog extends JDialog {
 	private boolean cancel_check;
 	private JSpinner spinner;
 	private JRadioButton rdbtn_lClick;
-
 	private JRadioButton rdbtn_rClick;
-
 	private JRadioButton rdbtn_wait;
-
 	private JRadioButton rdbtn_type;
 	private JDialog dialog;
 
-	// Used for viewing phase
+	// This constructor constructs the JDialog for viewing a phase.
 	public PhaseInfoDialog(int index, Vector<PhaseInfo> phase_info_vec, PhaseInfo phase_info, String url,
 			String phase_name, String element, String screenshot, String interaction, String message, int delay,
 			JFrame frame, String driver_loc, String driver_type) {
@@ -377,6 +371,7 @@ public class PhaseInfoDialog extends JDialog {
 
 	}
 
+	// Formats the the path to end in a .png.
 	public String format_path(String path) {
 		if (path.endsWith(".png")) {
 			return path;
@@ -386,17 +381,21 @@ public class PhaseInfoDialog extends JDialog {
 		}
 	}
 
+	// Sets the cancel_check to make sure a canceled phase_info is not added to the test list.
 	private void set_cancel_check(boolean checker) {
 		this.cancel_check = checker;
 	}
 
+	// Gets the cancel_check to make sure a canceled phase_info is not added to the test list.
 	public boolean get_cancel_check() {
 		return this.cancel_check;
 	}
 
+	// Creates listener for the "Add Element" button. 
 	private void btn_element_listener(JButton btn, PhaseInfo phase_info) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Populates system window for user to open the element file of their choosing.
 				JFileChooser j = new JFileChooser();
 				j.showOpenDialog(null);
 				String file_path = j.getSelectedFile().getAbsolutePath();
@@ -407,9 +406,11 @@ public class PhaseInfoDialog extends JDialog {
 		});
 	}
 
+	// Creates listener for the "Take Screenshot" button.
 	private void btn_screenshot_listener(JButton btn) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Populates system window for user to save the screenshot to a file of their choosing.
 				JFileChooser j = new JFileChooser();
 				j.showSaveDialog(null);
 				file_name = j.getSelectedFile().getAbsolutePath();
@@ -419,7 +420,7 @@ public class PhaseInfoDialog extends JDialog {
 		});
 	}
 
-
+	// Creates listener for the "Done" or "Ok" buttons.
 	private void btn_done_listener(JButton btn, int index, PhaseInfo phase_info, Vector<PhaseInfo> phase_info_vec, String driver_loc, String driver_type, String url, String done_or_ok) {
 		btn.addActionListener(new ActionListener() {
 			@Override
@@ -438,6 +439,7 @@ public class PhaseInfoDialog extends JDialog {
 
 				boolean has_duplicate = false;
 				
+				// Checks to see if we are in the JDialog for adding or viewing a phase. "Done" is for adding and "Ok" is used for viewing. 
 				if (done_or_ok.equals("done")) {
 					for (PhaseInfo phase : phase_info_vec) {
 						if (phase.get_phase_name().equals(text)) {
@@ -456,10 +458,9 @@ public class PhaseInfoDialog extends JDialog {
 							has_duplicate = true;
 						}
 					}
-				}
-				// Checks if a duplicate phase name is being added.
-				
+				}				
 
+				//Checks to make sure input is entered and valid.
 				if (txtField_phaseName.getText().isEmpty()) {
 					String opt_buttons[] = { "Ok" };
 					JOptionPane.showOptionDialog(null, "Please enter a unique phase name.", "TestCV",
@@ -504,6 +505,7 @@ public class PhaseInfoDialog extends JDialog {
 						interaction_type = "Type";
 					}
 
+					// If the "Take Screenshot" button was pressed, pressing "Done" or "Ok" will call Screenshotter to take the screenshot.
 					if (take_screenshot_selected == true) {
 						System.out.println("screenshot for index:" + index);
 						Screenshotter ss = new Screenshotter(index, phase_info_vec, file_name, interaction_type,
@@ -519,9 +521,11 @@ public class PhaseInfoDialog extends JDialog {
 		});
 	}
 	
+	// Creates listener for the "Upload" button.
 	private void upload_button_listener(JButton btn) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Populates system window for user to choose the screenshot file of their choosing.
 				JFileChooser j = new JFileChooser();
 				j.showOpenDialog(null);
 				file_name = j.getSelectedFile().getAbsolutePath();
@@ -531,6 +535,7 @@ public class PhaseInfoDialog extends JDialog {
 		});
 	}
 	
+	// Creates listener for the "X" button.
 	private void close_window_listener(JDialog dialog) {
 		dialog.addWindowListener(new WindowAdapter() {
 			@Override

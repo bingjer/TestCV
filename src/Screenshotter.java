@@ -53,14 +53,12 @@ public class Screenshotter implements Runnable   {
 		        driver = new FirefoxDriver();
 			}
 		} 
+		// Catches the driver exception if an incorrect driver was used for the browser. 
 		catch (Exception e) {
 			String opt_buttons[] = {"Ok"};
 	        JOptionPane.showOptionDialog(null, "Could not start driver. Make sure you have the correct driver selected for your browser version.", "TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
 	        
 		}
-		
-		
-		
 		
 		// Handles edge case where the phase list is empty.
 		if(index == 0) {
@@ -176,7 +174,7 @@ public class Screenshotter implements Runnable   {
 			}
 		} 
 		
-		// For all other cases
+		// For all other cases.
 		else {
 	        Screen s = new Screen();
 	        
@@ -194,6 +192,8 @@ public class Screenshotter implements Runnable   {
 	    	        }
 
 	        	}
+	        	
+	        	// Only launches the URL if its the first phase.
 	        	if(i == 0) {
 	        		driver.get(url); 
 	    	        driver.manage().window().maximize();
@@ -348,7 +348,7 @@ public class Screenshotter implements Runnable   {
 	        	break;
 	        }
 	        
-	     // Default wait 3 seconds before taking a screenshot.
+	        // Default wait 3 seconds before taking a screenshot.
 	        if(interaction != "Wait") {
 	        	synchronized(this) {
 	    	        try {

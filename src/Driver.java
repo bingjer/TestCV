@@ -1,22 +1,12 @@
-import java.awt.AWTException;
-import java.awt.Color;
-import java.awt.Rectangle;
-import java.awt.Robot;
-import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
+// This file Driver.java for starting and controlling the WebDriver.
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Vector;
-import java.util.concurrent.CountDownLatch;
-
-import javax.imageio.ImageIO;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-
 import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.By;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -28,11 +18,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 
 public class Driver implements Runnable {
 
-	private String file_name;
 	private Vector<PhaseInfo> phase_info_vec;
-	private int index;
-	private String interaction;
-	private String element;
 	private int counter = 0;
 	private DefaultListModel logs;
 	private JList list;
@@ -61,19 +47,27 @@ public class Driver implements Runnable {
 		int run_counter = 1;
 		while (test_run_counter > 0) {
 
-			WebDriver driver;
-			// System.setProperty("webdriver.chrome.driver",
-			// "D:\\Downloads\\chromedriver_98.exe");
-			if (driver_type.equals("chrome")) {
-				System.setProperty("webdriver.chrome.driver", driver_loc);
-				driver = new ChromeDriver();
-			} else if (driver_type.equals("firefox")) {
-				System.setProperty("webdriver.gecko.driver", driver_loc);
-				driver = new FirefoxDriver();
-			} else {
-				driver = null;
+			WebDriver driver = null;
+			try {
+				if (driver_type.equals("chrome")) {
+					System.setProperty("webdriver.chrome.driver", driver_loc);
+					driver = new ChromeDriver();
+				} else {
+					System.setProperty("webdriver.gecko.driver", driver_loc);
+					driver = new FirefoxDriver();
+				}
 			}
+			// Catches the driver exception if an incorrect driver was used for the browser.
+			catch (Exception e) {
+				String opt_buttons[] = { "Ok" };
+				JOptionPane.showOptionDialog(null,
+						"Could not start driver. Make sure you have the correct driver selected for your browser version.",
+						"TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons,
+						opt_buttons[0]);
 
+			}
+			
+			// Creates the SikuliX screen object.
 			Screen s = new Screen();
 
 			logs.add(counter, "===============================================================");
@@ -85,17 +79,11 @@ public class Driver implements Runnable {
 			counter++;
 			run_counter++;
 
+			// Runs all the tests in the test list.
 			for (int i = 0; i < phase_info_vec.size(); i++) {
-				System.out.println(phase_info_vec.size());
-				System.out.println(phase_info_vec.get(i).get_screenshot());
 				if (i == 0) {
-					// driver.get("http://google.com"); // change to url in live
-					System.out.println("Here");
-					System.out.println(url);
-
 					driver.get(url);
 					driver.manage().window().maximize();
-					// TODO: change to url or phase
 					logs.add(counter, "Opening web page at: " + url);
 					list.setModel(logs);
 					counter++;
@@ -109,13 +97,11 @@ public class Driver implements Runnable {
 				list.setModel(logs);
 				counter++;
 
-				// Pattern pattern = new Pattern(phase.get_element());
 				String element_path = phase_info_vec.get(i).get_element();
+				// Creates the pattern of the element to interact with. 
 				Pattern pattern = new Pattern(element_path);
-				System.out.println("Line 127.");
 				String interaction_type = phase_info_vec.get(i).get_interaction_type();
-
-				System.out.println(interaction_type);
+				
 				if (phase_info_vec.get(i).get_wait_time() != 0) {
 					synchronized (this) {
 						try {
@@ -182,7 +168,6 @@ public class Driver implements Runnable {
 					synchronized (this) {
 						try {
 							this.wait(3000);
-
 						} catch (InterruptedException e) {
 							logs.add(counter, "Could not take screenshot for test " + run_counter + " Phase "
 									+ phase_info_vec.get(i).get_phase_name());
@@ -205,17 +190,27 @@ public class Driver implements Runnable {
 				}
 				System.out.println("Took Screenshot" + " saved at " + screenShot);
 
-				ImageComparison test = new ImageComparison(phase_info_vec.get(i).get_screenshot(),
-						screenShot.getAbsolutePath());
+				ImageComparison test = new ImageComparison();
+				
+				
 
 				double[] data = test.compareImages(phase_info_vec.get(i).get_screenshot(),
 						screenShot.getAbsolutePath());
+				
+				if (data == null) {
+					logs.add(counter, "The images were empty.");
+					list.setModel(logs);
+					counter++;
+				}
+				else {
+					double correlation_pct = data[0] * 100;
 
-				double correlation_pct = data[0] * 100;
+					logs.add(counter, "The images were " + correlation_pct + "% similar.");
+					list.setModel(logs);
+					counter++;
+				}
 
-				logs.add(counter, "The images were " + correlation_pct + "% similar.");
-				list.setModel(logs);
-				counter++;
+				
 
 			}
 

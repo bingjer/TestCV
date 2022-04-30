@@ -1,7 +1,6 @@
 // This file TestInfo.java writes and reads JSON text files containing TestCV test information.
 
 import java.util.Vector;
-import javax.swing.JOptionPane;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -14,7 +13,7 @@ import com.google.gson.JsonSyntaxException;
 public class TestInfo {
 	private static FileWriter file;
 	
-	
+	// Writes JSON to file.
 	public void write_json(String file_name, Vector<PhaseInfo> phase_info_vec) throws IOException {
 		JsonObject json_obj = new JsonObject();
 		int counter = 1;
@@ -33,30 +32,13 @@ public class TestInfo {
 			json_obj.add(string_counter, inner_obj);
 			++counter;
 		}
-		//try {
-			System.out.println("here1");
-			System.out.println(json_obj.toString());
-			System.out.println(file_name);
-			file = new FileWriter(file_name);
-			file.write(json_obj.toString());
-		//} catch (IOException e) {
-		//	e.printStackTrace();
-		//	String opt_buttons[] = {"Ok"};
-	    //    JOptionPane.showOptionDialog(null, "Could not write to file. Please try again.", "TestCV", 
-	     //   		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
-		//} finally {
-		//	try {
-				file.flush();
-				file.close();
-		//	} catch (IOException e) {
-		//		e.printStackTrace();
-		//		String opt_buttons[] = {"Ok"};
-		//        JOptionPane.showOptionDialog(null, "Could not write to file. Please try again.", "TestCV", 
-		    //    		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons, opt_buttons[0]);
-		//	}
-	//	}
+		file = new FileWriter(file_name);
+		file.write(json_obj.toString());
+		file.flush();
+		file.close();
 	}
 	
+	// Read and parse JSON from file.
 	public void load_json(String file_name, Vector<PhaseInfo> phase_vec) throws FileNotFoundException, JsonSyntaxException  {
 		Object obj;
 		FileReader read_file = new FileReader(file_name);
@@ -69,7 +51,7 @@ public class TestInfo {
 			for(String inner_key : inner_json_obj.keySet()) {
 				JsonElement inner_value = inner_json_obj.get(inner_key);
 				System.out.println(inner_value);
-
+				
 				String inner_key_string = (String) inner_key;
 				String inner_value_string = inner_value.toString();
 				inner_value_string = inner_value_string.replace("\"", "");

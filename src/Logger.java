@@ -1,3 +1,4 @@
+// This file Logger.java stores the necessary information for instantiating the Logger class.
 
 public class Logger {
 	

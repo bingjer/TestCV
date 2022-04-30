@@ -1,14 +1,11 @@
 // This file WelcoemFrame.java contains the logic to construct and implement the Welcome Frame for TestCV.
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Vector;
-
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
@@ -16,17 +13,9 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.LayoutStyle.ComponentPlacement;
-
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.stream.MalformedJsonException;
-
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-
 import java.awt.Font;
 import javax.swing.SwingConstants;
 import javax.swing.JTextField;
@@ -35,27 +24,21 @@ import javax.swing.JTextField;
 
 public class WelcomeFrame extends JInternalFrame {
 	
-	private JFrame jFrame;
-	private JTextField txtField_workspace;
-	private JButton btn_existing_test;
-	private JButton btn_new_test;
-	private JButton btn_workspace;
-	
 	public WelcomeFrame() {
 		// Frame configurations.
-		jFrame = new JFrame("Welcome!");
+		JFrame jFrame = new JFrame("Welcome!");
 		jFrame.setAlwaysOnTop(true);
 		jFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		jFrame.setVisible(true);
 		jFrame.setBounds(100, 100, 450, 300);
 		
 		// Button creation.
-		btn_existing_test = new JButton("Exisiting Test");
-		btn_new_test = new JButton("New Test");
-		btn_workspace = new JButton("Select Workspace");
+		JButton btn_existing_test = new JButton("Exisiting Test");
+		JButton btn_new_test = new JButton("New Test");
+		JButton btn_workspace = new JButton("Select Workspace");
 		
 		// TextField creation.
-		txtField_workspace = new JTextField();
+		JTextField txtField_workspace = new JTextField();
 		txtField_workspace.setEditable(false);
 		txtField_workspace.setColumns(10);
 		
@@ -188,12 +171,13 @@ public class WelcomeFrame extends JInternalFrame {
 		});
 	}
 	
-	
+	// Creates a listener for the "Select Workspace" button.
 	private void workspace_button_listener(JButton btn, JTextField txt) {
 		btn.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				try {
+					// Populates system window for user to choose the workspace folder of their choosing.
 					JFileChooser j = new JFileChooser();
 					j.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 					int option = j.showOpenDialog(null);

@@ -4,11 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Vector;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -21,12 +18,6 @@ import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JLabel;
-import java.awt.BorderLayout;
-import java.awt.List;
-
-import javax.swing.JTextPane;
-import javax.swing.JTextArea;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -40,7 +31,6 @@ public class TestFrame extends JFrame {
 	private int counter;
 	private String driver_loc;
 	private JFrame frmTestRunner = new JFrame(); 
-	//private Vector<PhaseInfo> phase_info_vec;
 	private JTextField txtField_url;
 	private JTextField txtField_driver;
 	private JButton btn_driver;
@@ -322,8 +312,9 @@ public class TestFrame extends JFrame {
 		
 	}
 	
+	// Validates the url and alerts the user if it doesn't start with http:// or https://.
 	private boolean validate_url(String url) {
-		if(url.startsWith("http://") || url.startsWith("https://")) {
+		if(url.toLowerCase().startsWith("http://") || url.toLowerCase().startsWith("https://")) {
 			return true;
 		}
 		else {
@@ -334,10 +325,11 @@ public class TestFrame extends JFrame {
 		}
 	}
 	
-	
+	// Creates a listener for the "Choose Driver' button.
 	private void driver_button_listener(JButton btn) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				// Opens the system file chooser for the user to select the location of their driver.
 				JFileChooser j = new JFileChooser();
 				j.showOpenDialog(null);
 				driver_loc = j.getSelectedFile().getAbsolutePath();
@@ -347,14 +339,10 @@ public class TestFrame extends JFrame {
 		});
 	}
 	
+	// Creates a listener for the "View Phase" button.
 	private void view_phase_listener(JButton btn, Vector<PhaseInfo> phase_info_vec) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println("here1");
-				System.out.println(txtField_driver.getText());
-				if(txtField_driver.getText().isEmpty()) {
-					System.out.println("here2poop");
-				}
 				int index = list.getSelectedIndex();
 				System.out.println(index);
 				System.out.println(phase_info_vec.get(index).get_phase_name());
@@ -367,6 +355,7 @@ public class TestFrame extends JFrame {
 				String url = txtField_url.getText();
 				int delay = selected_phase.get_wait_time();
 				
+				// Checks to validate user input on the test frame before opening a JDialog.
 				if(validate_url(url)) {
 					if(!rdbtn_chrome.isSelected() && !rdbtn_firefox.isSelected()) {
 						String opt_buttons[] = {"Ok"};
@@ -392,6 +381,7 @@ public class TestFrame extends JFrame {
 						else  {
 							driver_type = "firefox";
 						}
+						// Logic to make sure the phase is being added in the correct order of the list.
 						counter = list.getSelectedIndex();
 						PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, selected_phase, url, phase_name, element, screenshot, interaction, message, delay, frmTestRunner, driver_loc, driver_type);
 						phase_info_vec.set(index, selected_phase);
@@ -403,12 +393,13 @@ public class TestFrame extends JFrame {
 		});
 	}
 	
-	
+	// Creates a listener for the "Run Phase" button.
 	private void run_button_listener(JButton btn, Vector<PhaseInfo> phase_info_vec, String workfolder) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String driver_type = "";
 				
+				// Checks to validate user input on the test frame before opening a the ResultFrame.
 				if(validate_url(txtField_url.getText())) {
 					if(!rdbtn_chrome.isSelected() && !rdbtn_firefox.isSelected()) {
 						String opt_buttons[] = {"Ok"};
@@ -449,20 +440,16 @@ public class TestFrame extends JFrame {
 		});
 	}
 	
-	
+	// Creates a listener for the "Save" button.
 	private void save_button_listener(JButton btn, Vector<PhaseInfo> phase_info_vec) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				for(PhaseInfo phase : phase_info_vec) {
-					System.out.println(phase.get_phase_name());
-				}
+				// Opens the system file chooser to allow the user to select where they can save their test.
 				TestInfo test = new TestInfo();
 				JFileChooser j = new JFileChooser();
 				j.showSaveDialog(null);
 				String file = j.getSelectedFile().getAbsolutePath();
-				System.out.println("here");
-				
-				System.out.println(file);
+				// Writes the file to the location.
 				try {
 					test.write_json(file, phase_info_vec);
 				} catch (IOException e1) {
@@ -475,12 +462,13 @@ public class TestFrame extends JFrame {
 		});
 	}
 	
-	
+	// Creates a listener for the "Delete" button.
 	private void delete_button_listener(JButton btn, Vector<PhaseInfo> phase_info_vec) {
 		btn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int index = list.getSelectedIndex();
-				System.out.println(index);
+				
+				// Makes sure an index in the list is selected before deleting.
 				if (index != -1) {
 					phase_list.remove(index);
 					phase_info_vec.remove(index);
@@ -489,6 +477,7 @@ public class TestFrame extends JFrame {
 		});
 	}
 	
+	// Creats a listener for the "Add Phase" button.
 	private void add_button_listener(JButton btn, Vector<PhaseInfo> phase_info_vec) {
 		btn.addActionListener(new ActionListener() {
 			@Override
@@ -498,6 +487,7 @@ public class TestFrame extends JFrame {
 				String driver_loc = txtField_driver.getText();
 				String driver_type = "";
 				
+				// Adjusts the counter depending on where in the list the user is adding.
 				if(list.isSelectionEmpty()) {
 					counter = phase_info_vec.size();
 				}
@@ -529,6 +519,8 @@ public class TestFrame extends JFrame {
 							driver_type = "firefox";
 						}
 						PhaseInfoDialog phase_dialog = new PhaseInfoDialog(counter, phase_info_vec, phase_info, url, frmTestRunner, driver_loc, driver_type);
+						
+						// If the user does not cancel the phase, the information is added to the test list.
 						if(!phase_dialog.get_cancel_check()) {
 							++counter;
 							System.out.println(phase_info.get_phase_name());

@@ -1,3 +1,4 @@
+// This file PhaseInfo.java stored the PhaseInfo class which holds all the necessary information for each phase.
 
 public class PhaseInfo {
 	private String element_path;
