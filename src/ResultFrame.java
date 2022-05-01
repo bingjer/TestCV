@@ -7,6 +7,10 @@ import java.util.Vector;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+
 import javax.swing.JOptionPane;
 import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
@@ -35,7 +39,7 @@ public class ResultFrame extends JFrame  {
 	private int run_counter;
 	private String workfolder;
 	JFrame frame;
-	DefaultListModel logs;
+	DefaultListModel<String> logs;
 	
 	public ResultFrame(int run_counter, String url, String driver_loc, String driver_type, Vector<PhaseInfo> phase_info_vec, String workfolder) {
 		// Initialize private members
@@ -85,6 +89,7 @@ public class ResultFrame extends JFrame  {
 		Driver ss = new Driver(run_counter, phase_info_vec, logs, list, url, driver_loc, driver_type, workfolder);
 		Thread t = new Thread(ss);
 		t.start();
+		
 		
 		// GroupLayou construction.
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);

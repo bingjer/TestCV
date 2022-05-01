@@ -20,16 +20,16 @@ public class Driver implements Runnable {
 
 	private Vector<PhaseInfo> phase_info_vec;
 	private int counter = 0;
-	private DefaultListModel logs;
-	private JList list;
+	private DefaultListModel<String> logs;
+	private JList<String> list;
 	private String url;
 	private String driver_loc;
 	private String driver_type;
 	private int test_run_counter;
 	private String workfolder;
 
-	public Driver(int test_run_counter, Vector<PhaseInfo> phase_info_vec, DefaultListModel logs, JList list, String url,
-			String driver_loc, String driver_type, String workfolder) {
+	public Driver(int test_run_counter, Vector<PhaseInfo> phase_info_vec, DefaultListModel<String> logs,
+			JList<String> list, String url, String driver_loc, String driver_type, String workfolder) {
 		this.phase_info_vec = phase_info_vec;
 		this.counter = 0;
 		this.logs = logs;
@@ -42,11 +42,21 @@ public class Driver implements Runnable {
 
 	}
 
+	// Overrides Java.Runnable to run the thread. Implements the logic of running
+	// the WebDriver and creating logs.
 	@Override
 	public void run() {
+		// Keeps track of the runs counter for logging purposes.
 		int run_counter = 1;
+
+		Vector<String> failure_map = new Vector<String>();
+		Vector<String> warning_map = new Vector<String>();
+		;
+
+		// Loop to repeat the test for the number of user selected runs.
 		while (test_run_counter > 0) {
 
+			// Initializes the web driver.
 			WebDriver driver = null;
 			try {
 				if (driver_type.equals("chrome")) {
@@ -58,26 +68,27 @@ public class Driver implements Runnable {
 				}
 			}
 			// Catches the driver exception if an incorrect driver was used for the browser.
+			// Breaks out of loop and ends the test if the driver cannot be created.
 			catch (Exception e) {
 				String opt_buttons[] = { "Ok" };
 				JOptionPane.showOptionDialog(null,
 						"Could not start driver. Make sure you have the correct driver selected for your browser version.",
 						"TestCV", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, opt_buttons,
 						opt_buttons[0]);
+				break;
 
 			}
-			
+
 			// Creates the SikuliX screen object.
 			Screen s = new Screen();
 
 			logs.add(counter, "===============================================================");
 			list.setModel(logs);
-
 			counter++;
+
 			logs.add(counter, "Starting run number: " + run_counter);
 			list.setModel(logs);
 			counter++;
-			run_counter++;
 
 			// Runs all the tests in the test list.
 			for (int i = 0; i < phase_info_vec.size(); i++) {
@@ -91,27 +102,29 @@ public class Driver implements Runnable {
 
 				logs.add(counter, "===============================================================");
 				list.setModel(logs);
-
 				counter++;
+
 				logs.add(counter, "Starting phase: " + phase_info_vec.get(i).get_phase_name());
 				list.setModel(logs);
 				counter++;
 
+				// Get element and interaction type from current object.
 				String element_path = phase_info_vec.get(i).get_element();
-				// Creates the pattern of the element to interact with. 
-				Pattern pattern = new Pattern(element_path);
 				String interaction_type = phase_info_vec.get(i).get_interaction_type();
-				
+
+				// Creates the pattern of the element to interact with.
+				Pattern pattern = new Pattern(element_path);
+
+				// This is the logic for waiting if both the "Wait" interaction has been chosen
+				// and if a delay was added by the user.
 				if (phase_info_vec.get(i).get_wait_time() != 0) {
 					synchronized (this) {
 						try {
-							System.out.println("waiting");
-
 							this.wait(phase_info_vec.get(i).get_wait_time() * 1000);
-							System.out.println("has it been 5 sec?");
-
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
+							logs.add(counter, "Could not wait. Phase failed.");
+							list.setModel(logs);
+							counter++;
 							e.printStackTrace();
 						}
 					}
@@ -122,42 +135,90 @@ public class Driver implements Runnable {
 					try {
 						s.wait(pattern, 10);
 					} catch (FindFailed e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
+						if (!failure_map.contains(
+								"Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name())) {
+							failure_map
+									.add("Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name());
+						}
+						logs.add(counter, "Could not find element. Phase failed.");
+						list.setModel(logs);
+						counter++;
+						break;
 					}
 					try {
 						s.click(pattern);
 					} catch (FindFailed e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
+						if (!failure_map.contains(
+								"Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name())) {
+							failure_map
+									.add("Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name());
+						}
+						logs.add(counter, "Could not find element. Phase failed.");
+						list.setModel(logs);
+						counter++;
+						break;
 					}
 					break;
 				case "Rclick":
 					try {
 						s.wait(pattern, 10);
 					} catch (FindFailed e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
+						if (!failure_map.contains(
+								"Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name())) {
+							failure_map
+									.add("Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name());
+						}
+						logs.add(counter, "Could not find element. Phase failed.");
+						list.setModel(logs);
+						counter++;
+						break;
 					}
 					try {
 						s.rightClick(pattern);
 					} catch (FindFailed e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
+						if (!failure_map.contains(
+								"Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name())) {
+							failure_map
+									.add("Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name());
+						}
+						logs.add(counter, "Could not find element. Phase failed.");
+						list.setModel(logs);
+						counter++;
+						break;
 					}
 					break;
 				case "Type":
 					try {
 						s.wait(pattern, 10);
 					} catch (FindFailed e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
+						if (!failure_map.contains(
+								"Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name())) {
+							failure_map
+									.add("Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name());
+						}
+						logs.add(counter, "Could not find element. Phase failed.");
+						list.setModel(logs);
+						counter++;
+						break;
 					}
 					try {
 						s.type(pattern, phase_info_vec.get(i).get_message());
 					} catch (FindFailed e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
+						if (!failure_map.contains(
+								"Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name())) {
+							failure_map
+									.add("Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name());
+						}
+						logs.add(counter, "Could not find element. Phase failed.");
+						list.setModel(logs);
+						counter++;
+						break;
 					}
 				default:
 					break;
@@ -169,6 +230,11 @@ public class Driver implements Runnable {
 						try {
 							this.wait(3000);
 						} catch (InterruptedException e) {
+							if (!failure_map.contains(
+									"Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name())) {
+								failure_map.add(
+										"Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name());
+							}
 							logs.add(counter, "Could not take screenshot for test " + run_counter + " Phase "
 									+ phase_info_vec.get(i).get_phase_name());
 							list.setModel(logs);
@@ -185,41 +251,90 @@ public class Driver implements Runnable {
 				try {
 					FileUtils.copyFile(scrFile, screenShot);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
+					if (!failure_map
+							.contains("Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name())) {
+						failure_map.add("Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name());
+					}
+					logs.add(counter, "Failed to take screenshot. Phase failed.");
+					list.setModel(logs);
+					counter++;
+					break;
 				}
-				System.out.println("Took Screenshot" + " saved at " + screenShot);
 
 				ImageComparison test = new ImageComparison();
-				
-				
 
 				double[] data = test.compareImages(phase_info_vec.get(i).get_screenshot(),
 						screenShot.getAbsolutePath());
-				
+
 				if (data == null) {
+					if (!failure_map
+							.contains("Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name())) {
+						failure_map.add("Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name());
+					}
 					logs.add(counter, "The images were empty.");
 					list.setModel(logs);
 					counter++;
-				}
-				else {
+					break;
+				} else {
 					double correlation_pct = data[0] * 100;
-
 					logs.add(counter, "The images were " + correlation_pct + "% similar.");
 					list.setModel(logs);
 					counter++;
-				}
 
-				
+					// The 90% threshold catches images that are too dissimilar to pass.
+					if (correlation_pct < 90.0) {
+						if (!failure_map.contains(
+								"Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name())) {
+							failure_map
+									.add("Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name());
+						}
+					}
+					// If below 99.5% the images are not identical but may still be ok. Adds to
+					// warning map.
+					else if (correlation_pct < 99.5) {
+						if (!failure_map.contains(
+								"Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name())) {
+							failure_map
+									.add("Test: " + run_counter + " Phase: " + phase_info_vec.get(i).get_phase_name());
+						}
+					}
+				}
 
 			}
 
 			driver.quit();
+			run_counter++;
 			test_run_counter--;
 
 		}
+
 		logs.add(counter, "========================END TEST================================");
 		list.setModel(logs);
-	}
+		counter++;
 
+		// Print out set of warnings accrued for each run.
+		if (!warning_map.isEmpty()) {
+			logs.add(counter, "========================Test Warnings================================");
+			list.setModel(logs);
+			counter++;
+			for (String warning : warning_map) {
+				logs.add(counter, warning);
+				list.setModel(logs);
+				counter++;
+			}
+		}
+
+		// Print out set of failures accrued for each run.
+		if (!failure_map.isEmpty()) {
+			logs.add(counter, "========================Test Failures================================");
+			list.setModel(logs);
+			counter++;
+			for (String failure : failure_map) {
+				logs.add(counter, failure);
+				list.setModel(logs);
+				counter++;
+			}
+		}
+	}
 }
